@@ -26,14 +26,6 @@ module.exports = {
       image_url: {
         type: Sequelize.STRING(2048)
       },
-      user_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'User',
-          key: 'id'
-        },
-        allowNull: false
-      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

@@ -6,8 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     publisher: DataTypes.STRING,
     isbn_10: DataTypes.STRING,
     isbn_13: DataTypes.STRING,
-    image_url: DataTypes.STRING(2048),
-    user_id: DataTypes.INTEGER
+    image_url: DataTypes.STRING(2048)
   }, {
     underscored: true,
   });
