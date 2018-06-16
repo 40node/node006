@@ -1,0 +1,23 @@
+@startuml database
+package database <<Database>> {
+  entity users {
+    + id
+    --
+    name
+    - auth_hash
+    created_at
+    updated_at
+  }
+  entity libraries {
+    + id
+    --
+    title
+    author
+    publisher
+    isbn_10
+    isbn_13
+    image_url
+  }
+}
+users -ri-|{ libraries : 所持する本 >
+@enduml
