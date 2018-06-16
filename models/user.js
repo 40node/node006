@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
   });
   User.associate = function(models) {
-    User.hasMany(models.Library, {'foreignKey': 'user_id'})
+    User.hasMany(models.Library)
   };
   return User;
 };
