@@ -6,13 +6,15 @@ module.exports = {
       'Libraries', // name of Target model
       'user_id', // name of the key we're adding
       {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        foreignKey: true,
         references: {
           model: 'Users', // name of Source model
           key: 'id',
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onUpdate: 'RESTRICT',
+        onDelete: 'RESTRICT',
       }
     );
   },
