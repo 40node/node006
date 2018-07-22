@@ -1,14 +1,5 @@
 @startuml database
 package database <<Database>> {
-  entity users {
-    + id
-    --
-    name
-    - auth_hash
-    ..
-    created_at
-    updated_at
-  }
   entity libraries {
     + id
     --
@@ -22,6 +13,14 @@ package database <<Database>> {
     created_at
     updated_at
   }
+  entity comments {
+    + id
+    --
+    comment
+    ..
+    created_at
+    updated_at
+  }
 }
-users -ri-|{ libraries : 所持する本 >
+libraries -ri-|{ comments : 本のメモ >
 @enduml

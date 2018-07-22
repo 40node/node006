@@ -6,12 +6,14 @@ module.exports = (sequelize, DataTypes) => {
     publisher: DataTypes.STRING,
     isbn_10: DataTypes.STRING,
     isbn_13: DataTypes.STRING,
-    image_url: DataTypes.STRING(2048)
+    image_url: DataTypes.STRING(2048),
+    user_id: DataTypes.INTEGER
   }, {
     underscored: true,
   });
   Library.associate = function(models) {
     // associations can be defined here
+    Library.hasMany(models.Comment, {foreignKey: 'book_id'});
   };
   return Library;
 };
