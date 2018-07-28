@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+- "10.1"
+before_install:
+before_script:
+  - "npm install"
+  - "npm run build-all"
+script:
+  - "npm test"
+notifications:
+emails:
+  - tak@oshiire.to
+on_success: always
+on_failure: always
