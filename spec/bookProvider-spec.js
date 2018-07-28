@@ -2,7 +2,7 @@
 const book = require('../controllers/bookProvider');
 
 describe('#bookProvider', () => {
-  let req;
+  let req, res;
   beforeEach(() => {
     req = {
       params: {
@@ -11,6 +11,10 @@ describe('#bookProvider', () => {
         publisher: 'USP研究所',
         image_uml: ''
       }
+    };
+    res = {
+      redirect: function () { },
+      render: function () { }
     };
   });
 
@@ -58,6 +62,25 @@ describe('#bookProvider', () => {
             expect(result).toEqual(['本のタイトルが入っていません']);
             done();
           });
+      });
+    });
+
+    describe('#create', () => {
+      it('本が正常に登録される場合は Redirect される', (done) => {
+        res.redirect = (uri) => {
+          expect(uri).toMatch(/^\/books\/[0-9]+$/);
+          done();
+        };
+        book.create(req, res);
+      });
+      it('本が正常に登録されない場合はエラーページが rendering される', (done) => {
+        req.params.book_title = '';
+        res.render = (error, stacks) => {
+          expect(error).toBe('error');
+          expect(stacks.message).toBe('エラーが発生しました.');
+          done();
+        };
+        book.create(req, res);
       });
     });
   });
