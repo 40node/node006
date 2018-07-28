@@ -8,8 +8,7 @@
     "build-dev": "sequelize db:seed:all",
     "clean": "sequelize db:seed:undo:all",
     "build-all": "npm run build && npm run clean && npm run build-dev",
-    "eslint": "eslint controllers/",
-    "test": "npm run build-all && npm run eslint && jasmine"
+    "test": "npm run build-all && jasmine"
   },
   "engines": {
     "node": "10.1.0"
