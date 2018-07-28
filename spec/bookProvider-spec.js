@@ -20,6 +20,7 @@ describe('#bookProvider', () => {
         book.get_book(1)
           .then(result => {
             expect(result.id).toBe(1);
+            expect(result.Comments.length).toBe(3);
             done();
           }).catch(done.fail);
       });
