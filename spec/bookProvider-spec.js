@@ -28,8 +28,8 @@ describe('#bookProvider', () => {
             done();
           }).catch(done.fail);
       });
-      it('ID=3 の本とコメントはない', (done) => {
-        book.get_book(3)
+      it('ID=null の本とコメントはない', (done) => {
+        book.get_book(null)
           .then(result => {
             expect(result).toBeNull();
             done();
@@ -43,7 +43,7 @@ describe('#bookProvider', () => {
           done();
         };
         book.find(req, res);
-      });      
+      });
     });
   });
 
