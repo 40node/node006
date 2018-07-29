@@ -28,6 +28,22 @@ describe('#bookProvider', () => {
             done();
           }).catch(done.fail);
       });
+      it('ID=3 の本とコメントはない', (done) => {
+        book.get_book(3)
+          .then(result => {
+            expect(result).toBeNull();
+            done();
+          }).catch(done.fail);
+      });
+      it('本が登録されていれば、本の内容が表示される', (done) => {
+        req.params.id = 1;
+        res.render = (view, stacks) => {
+          expect(view).toBe('description');
+          expect(stacks.author).toBe('しょっさん');
+          done();
+        };
+        book.find(req, res);
+      });      
     });
   });
 
@@ -75,8 +91,8 @@ describe('#bookProvider', () => {
       });
       it('本が正常に登録されない場合はエラーページが rendering される', (done) => {
         req.params.book_title = '';
-        res.render = (error, stacks) => {
-          expect(error).toBe('error');
+        res.render = (view, stacks) => {
+          expect(view).toBe('error');
           expect(stacks.message).toBe('エラーが発生しました.');
           done();
         };

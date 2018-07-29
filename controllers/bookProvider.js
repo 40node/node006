@@ -14,6 +14,12 @@ module.exports = {
       }]
     });
   },
+  find: function(req, res) {
+    module.exports.get_book(req.params.id)
+      .then(result => {
+        res.render('description', result);
+      });
+  },
   validate: function (params) {
     let errors = params.errors = [];
 
