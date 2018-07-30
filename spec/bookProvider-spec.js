@@ -49,12 +49,23 @@ describe('#bookProvider', () => {
 
   describe('#view', () => {
     describe('#get_contents', () => {
-      it('2件の本が登録されている', (done) => {
+      it('2冊以上の本が登録されている', (done) => {
         book.get_contents()
           .then(results => {
-            expect(results.length).toBe(2);
+            expect(results.length).toBeGreaterThanOrEqual(2);
+            expect(results[0].id).toBe(1);
+            expect(results[1].id).toBe(2);
             done();
           }).catch(done.fail);
+      });
+      it('本の一覧を表示する', (done) => {
+        res.render = (view, stacks) => {
+          expect(view).toBe('view');
+          expect(stacks[0].id).toBe(1);
+          expect(stacks[1].author).toBe('しょっさん');
+          done();
+        };
+        book.view(req, res);
       });
     });
   });

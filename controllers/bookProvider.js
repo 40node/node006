@@ -14,12 +14,19 @@ module.exports = {
       }]
     });
   },
-  find: function(req, res) {
+  find: function (req, res) {
     module.exports.get_book(req.params.id)
       .then(result => {
         res.render('description', result);
       });
   },
+
+  get_contents: function () {
+    return libraries.findAll({
+      limit: 10
+    });
+  },
+
   validate: function (params) {
     let errors = params.errors = [];
 
