@@ -26,6 +26,12 @@ module.exports = {
       limit: 10
     });
   },
+  view: function (req, res) {
+    module.exports.get_contents(req.params.id)
+      .then(results => {
+        res.render('view', results);
+      });
+  },
 
   validate: function (params) {
     let errors = params.errors = [];
