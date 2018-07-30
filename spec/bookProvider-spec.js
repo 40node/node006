@@ -28,7 +28,7 @@ describe('#bookProvider', () => {
             done();
           }).catch(done.fail);
       });
-      it('ID=null の本とコメントはない', (done) => {
+      it('対象の本とコメントがない', (done) => {
         book.get_book(null)
           .then(result => {
             expect(result).toBeNull();
@@ -43,6 +43,18 @@ describe('#bookProvider', () => {
           done();
         };
         book.find(req, res);
+      });
+    });
+  });
+
+  describe('#view', () => {
+    describe('#get_contents', () => {
+      it('2件の本が登録されている', (done) => {
+        book.get_contents()
+          .then(results => {
+            expect(results.length).toBe(2);
+            done();
+          }).catch(done.fail);
       });
     });
   });
