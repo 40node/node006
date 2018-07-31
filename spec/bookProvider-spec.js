@@ -5,11 +5,14 @@ describe('#bookProvider', () => {
   let req, res;
   beforeEach(() => {
     req = {
-      params: {
+      body: {
         book_title: 'title',
         author: 'しょっさん',
         publisher: 'USP研究所',
         image_uml: ''
+      },
+      params: {
+        id: 1
       }
     };
     res = {
@@ -36,7 +39,6 @@ describe('#bookProvider', () => {
           }).catch(done.fail);
       });
       it('本が登録されていれば、本の内容が表示される', (done) => {
-        req.params.id = 1;
         res.render = (view, stacks) => {
           expect(view).toBe('description');
           expect(stacks.book.author).toBe('しょっさん');
@@ -73,21 +75,21 @@ describe('#bookProvider', () => {
   describe('#create', () => {
     describe('#validate()', () => {
       it('入力された値に問題がない', () => {
-        const result = book.validate(req.params);
+        const result = book.validate(req.body);
         expect(result).toBe(true);
-        expect(req.params.image_url).toBe('http://example.com/');
+        expect(req.body.image_url).toBe('http://example.com/');
       });
       it('タイトルが入っていない場合はエラーになる', () => {
-        req.params.book_title = '';
-        const result = book.validate(req.params);
+        req.body.book_title = '';
+        const result = book.validate(req.body);
         expect(result).toBe(false);
-        expect(req.params.errors).toEqual(['本のタイトルが入っていません']);
+        expect(req.body.errors).toEqual(['本のタイトルが入っていません']);
       });
     });
 
     describe('#register_book', () => {
       it('本が登録できる', (done) => {
-        book.register_book(req.params).then(result => {
+        book.register_book(req.body).then(result => {
           expect(result.book_title).toBe('title');
           expect(result.id).toBeGreaterThanOrEqual(2);
           expect(result.image_url).toBe('http://example.com/');
@@ -95,8 +97,8 @@ describe('#bookProvider', () => {
         }).catch(done.fail);
       });
       it('本のタイトルが未登録だと登録できない', (done) => {
-        req.params.book_title = '';
-        book.register_book(req.params).then(done.fail)
+        req.body.book_title = '';
+        book.register_book(req.body).then(done.fail)
           .catch(result => {
             expect(result).toEqual(['本のタイトルが入っていません']);
             done();
@@ -113,7 +115,7 @@ describe('#bookProvider', () => {
         book.create(req, res);
       });
       it('本が正常に登録されない場合はエラーページが rendering される', (done) => {
-        req.params.book_title = '';
+        req.body.book_title = '';
         res.render = (view, stacks) => {
           expect(view).toBe('error');
           expect(stacks.message).toBe('エラーが発生しました.');
@@ -125,7 +127,7 @@ describe('#bookProvider', () => {
 
     describe('#remove_book', () => {
       it('正常に削除されている', (done) => {
-        book.register_book(req.params).then(result => {
+        book.register_book(req.body).then(result => {
           book.remove_book(result.id).then(num => {
             expect(num).toBe(1);
             done();
@@ -142,7 +144,7 @@ describe('#bookProvider', () => {
     });
     describe('#destroy', () => {
       it('正常に削除できる', (done) => {
-        book.register_book(req.params).then(result => {
+        book.register_book(req.body).then(result => {
           req.params.id = result.id;
           res.redirect = (uri) => {
             expect(uri).toBe('/books/');
@@ -152,7 +154,6 @@ describe('#bookProvider', () => {
         });
       });
       it('本が正常に削除されない場合はエラーページが rendering される', (done) => {
-        req.params.id = 1;
         res.render = (view, stacks) => {
           expect(view).toBe('error');
           expect(stacks.message).toBe('エラーが発生しました.');

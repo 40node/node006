@@ -56,7 +56,7 @@ module.exports = {
   },
 
   create: function (req, res) {
-    module.exports.register_book(req.params)
+    module.exports.register_book(req.body)
       .then(result => {
         res.redirect(`/books/${result.id}`);
       }).catch(errors => {

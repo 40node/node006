@@ -7,7 +7,7 @@ router.get('/', function (req, res, next) {
   bookProvider.view(req, res);
 });
 
-router.get('/create', ((req, res) => {
+router.post('/create', ((req, res) => {
   bookProvider.create(req, res);
 }));
 
