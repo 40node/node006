@@ -132,6 +132,34 @@ describe('#bookProvider', () => {
           }).catch(done.fail);
         }).catch(done.fail);
       });
+      it('コメントのついているものは削除できない', (done) => {
+        book.remove_book(1).then(done.fail)
+          .catch(result => {
+            expect(result.name).toBe('SequelizeForeignKeyConstraintError');
+            done();
+          });
+      });
+    });
+    describe('#destroy', () => {
+      it('正常に削除できる', (done) => {
+        book.newOne(req.params).then(result => {
+          req.params.id = result.id;
+          res.redirect = (uri) => {
+            expect(uri).toBe('/books/');
+            done();
+          };
+          book.destroy(req, res);
+        });
+      });
+      it('本が正常に削除されない場合はエラーページが rendering される', (done) => {
+        req.params.id = 1;
+        res.render = (view, stacks) => {
+          expect(view).toBe('error');
+          expect(stacks.message).toBe('エラーが発生しました.');
+          done();
+        };
+        book.destroy(req, res);
+      });
     });
   });
 });

@@ -72,5 +72,19 @@ module.exports = {
         id: id
       }
     });
+  },
+  destroy: function (req, res) {
+    module.exports.remove_book(req.params.id)
+      .then(result => {
+        res.redirect(`/books/`);
+      }).catch(errors => {
+        res.render('error', {
+          message: 'エラーが発生しました.',
+          error: {
+            status: '本を削除できませんでした.',
+            stack: errors
+          }
+        });
+      });
   }
 };
