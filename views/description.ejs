@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>
+    <%= title %> の詳細
+  </h1>
+
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>本のタイトル</th>
+      <th>著者</th>
+      <th>出版社</th>
+    </tr>
+    <tr>
+      <td>
+        <%= book["id"] %>
+      </td>
+      <td>
+        <%= book['book_title'] %>
+      </td>
+      <td>
+        <%= book['author'] %>
+      </td>
+      <td>
+        <%= book['publisher'] %>
+      </td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>コメント</th>
+    </tr>
+    <% book.Comments.forEach(comment => { %>
+      <tr>
+        <td>
+          <%= comment["id"] %>
+        </td>
+        <td>
+          <%= comment["comment"] %>
+        </td>
+      </tr>
+      <% }); %>
+  </table>
+
+</body>
+
+</html>

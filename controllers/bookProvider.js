@@ -18,6 +18,7 @@ module.exports = {
     module.exports.get_book(req.params.id)
       .then(result => {
         res.render('description', {
+          title: result.book_title,
           book: result
         });
       });

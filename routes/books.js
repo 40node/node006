@@ -6,6 +6,9 @@ const bookProvider = require('../controllers/bookProvider');
 router.get('/', function (req, res, next) {
   bookProvider.view(req, res);
 });
+router.get('/:id', function (req, res, next) {
+  bookProvider.find(req, res);
+});
 
 router.post('/create', ((req, res) => {
   bookProvider.create(req, res);
