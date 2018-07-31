@@ -3,10 +3,10 @@ const libraries = models.Library;
 const comments = models.Comment;
 
 module.exports = {
-  get_book: function (id) {
+  get_book: function (book_id) {
     return libraries.findOne({
       where: {
-        id: id
+        id: book_id
       },
       include: [{
         model: comments,
@@ -43,7 +43,7 @@ module.exports = {
     return errors.length === 0;
   },
 
-  newOne: function (book) {
+  register_book: function (book) {
     if (module.exports.validate(book)) {
       return libraries.create(book);
     } else {
@@ -52,7 +52,7 @@ module.exports = {
   },
 
   create: function (req, res) {
-    module.exports.newOne(req.params)
+    module.exports.register_book(req.params)
       .then(result => {
         res.redirect(`/books/${result.id}`);
       }).catch(errors => {

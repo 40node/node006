@@ -85,9 +85,9 @@ describe('#bookProvider', () => {
       });
     });
 
-    describe('#newOne', () => {
+    describe('#register_book', () => {
       it('本が登録できる', (done) => {
-        book.newOne(req.params).then(result => {
+        book.register_book(req.params).then(result => {
           expect(result.book_title).toBe('title');
           expect(result.id).toBeGreaterThanOrEqual(2);
           expect(result.image_url).toBe('http://example.com/');
@@ -96,7 +96,7 @@ describe('#bookProvider', () => {
       });
       it('本のタイトルが未登録だと登録できない', (done) => {
         req.params.book_title = '';
-        book.newOne(req.params).then(done.fail)
+        book.register_book(req.params).then(done.fail)
           .catch(result => {
             expect(result).toEqual(['本のタイトルが入っていません']);
             done();
@@ -125,7 +125,7 @@ describe('#bookProvider', () => {
 
     describe('#remove_book', () => {
       it('正常に削除されている', (done) => {
-        book.newOne(req.params).then(result => {
+        book.register_book(req.params).then(result => {
           book.remove_book(result.id).then(num => {
             expect(num).toBe(1);
             done();
@@ -142,7 +142,7 @@ describe('#bookProvider', () => {
     });
     describe('#destroy', () => {
       it('正常に削除できる', (done) => {
-        book.newOne(req.params).then(result => {
+        book.register_book(req.params).then(result => {
           req.params.id = result.id;
           res.redirect = (uri) => {
             expect(uri).toBe('/books/');
