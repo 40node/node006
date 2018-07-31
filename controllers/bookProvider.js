@@ -64,6 +64,13 @@ module.exports = {
           }
         });
       });
-  }
+  },
 
+  remove_book: function (id) {
+    return libraries.destroy({
+      where: {
+        id: id
+      }
+    });
+  }
 };

@@ -122,5 +122,16 @@ describe('#bookProvider', () => {
         book.create(req, res);
       });
     });
+
+    describe('#remove_book', () => {
+      it('正常に削除されている', (done) => {
+        book.newOne(req.params).then(result => {
+          book.remove_book(result.id).then(num => {
+            expect(num).toBe(1);
+            done();
+          }).catch(done.fail);
+        }).catch(done.fail);
+      });
+    });
   });
 });
