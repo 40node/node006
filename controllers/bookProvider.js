@@ -17,7 +17,9 @@ module.exports = {
   find: function (req, res) {
     module.exports.get_book(req.params.id)
       .then(result => {
-        res.render('description', result);
+        res.render('description', {
+          book: result
+        });
       });
   },
 
@@ -27,9 +29,11 @@ module.exports = {
     });
   },
   view: function (req, res) {
-    module.exports.get_contents(req.params.id)
+    module.exports.get_contents()
       .then(results => {
-        res.render('view', results);
+        res.render('view', {
+          books: results
+        });
       });
   },
 

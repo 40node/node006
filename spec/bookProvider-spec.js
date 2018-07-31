@@ -39,7 +39,7 @@ describe('#bookProvider', () => {
         req.params.id = 1;
         res.render = (view, stacks) => {
           expect(view).toBe('description');
-          expect(stacks.author).toBe('しょっさん');
+          expect(stacks.book.author).toBe('しょっさん');
           done();
         };
         book.find(req, res);
@@ -61,8 +61,8 @@ describe('#bookProvider', () => {
       it('本の一覧を表示する', (done) => {
         res.render = (view, stacks) => {
           expect(view).toBe('view');
-          expect(stacks[0].id).toBe(1);
-          expect(stacks[1].author).toBe('しょっさん');
+          expect(stacks.books[0].id).toBe(1);
+          expect(stacks.books[1].author).toBe('しょっさん');
           done();
         };
         book.view(req, res);
