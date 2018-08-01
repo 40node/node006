@@ -29,9 +29,11 @@
     </tr>
     <% books.forEach(book => { %>
       <tr>
-        <form action="/books/edit/<%= book['id'] %>" method="post">
+        <form action="/books/update/<%= book['id'] %>" method="post">
           <td>
-            <%= book["id"] %>
+            <a href="/books/<%= book['id'] %>">
+              <%= book[ 'id'] %>
+            </a>
           </td>
           <td>
             <input type="text" name="book_title" value="<%= book['book_title'] %>">
@@ -44,7 +46,7 @@
           </td>
           <td>
             <input type="submit" value="更新">
-            <a href="/users/destroy/<%= book['id'] %>">削除</a>
+            <a href="/books/destroy/<%= book['id'] %>">削除</a>
           </td>
         </form>
       </tr>

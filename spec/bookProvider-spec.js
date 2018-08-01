@@ -125,6 +125,24 @@ describe('#bookProvider', () => {
       });
     });
 
+    describe('#update_book', () => {
+      it('本の内容を編集できる', (done) => {
+        req.body.book_title = '編集タイトル';
+        book.update_book(req.params.id, req.body).then(result => {
+          expect(result.length).toBe(1);
+          expect(result[0]).toBe(1);
+          done();
+        }).catch(done.fail);
+      });
+      it('本が正常に更新される場合は Redirect される', (done) => {
+        res.redirect = (uri) => {
+          expect(uri).toMatch(/^\/books\/[0-9]+$/);
+          done();
+        };
+        book.update(req, res);
+      });
+    });
+
     describe('#remove_book', () => {
       it('正常に削除されている', (done) => {
         book.register_book(req.body).then(result => {

@@ -55,11 +55,36 @@ module.exports = {
       return Promise.reject(book.errors);
     }
   },
-
   create: function (req, res) {
     module.exports.register_book(req.body)
       .then(result => {
         res.redirect(`/books/${result.id}`);
+      }).catch(errors => {
+        res.render('error', {
+          message: 'エラーが発生しました.',
+          error: {
+            status: '本を登録できませんでした.',
+            stack: errors
+          }
+        });
+      });
+  },
+
+  update_book: function (id, book) {
+    if (module.exports.validate(book)) {
+      return libraries.update(book, {
+        where: {
+          id: id
+        }
+      });
+    } else {
+      return Promise.reject(book.errors);
+    }
+  },
+  update: function (req, res) {
+    module.exports.update_book(req.params.id, req.body)
+      .then(result => {
+        res.redirect(`/books/${req.params.id}`);
       }).catch(errors => {
         res.render('error', {
           message: 'エラーが発生しました.',

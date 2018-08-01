@@ -15,6 +15,10 @@ router.post('/create', ((req, res) => {
   bookProvider.create(req, res);
 }));
 
+router.post('/update/:id', ((req, res) => {
+  bookProvider.update(req, res);
+}));
+
 router.get('/destroy/:id', function (req, res, next) {
   bookProvider.destroy(req, res);
 });
