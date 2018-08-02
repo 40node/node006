@@ -56,6 +56,7 @@ describe('#bookProvider', () => {
           .then(results => {
             expect(results.length).toBeGreaterThanOrEqual(2);
             expect(results[0].id).toBe(1);
+            expect(results[0].cnt).toBe(3);
             expect(results[1].id).toBe(2);
             done();
           }).catch(done.fail);

@@ -25,6 +25,7 @@
       <th>本のタイトル</th>
       <th>著者</th>
       <th>出版社</th>
+      <th>コメント数</th>
       <th></th>
     </tr>
     <% books.forEach(book => { %>
@@ -43,6 +44,9 @@
           </td>
           <td>
             <input type="text" name="publisher" value="<%= book['publisher'] %>">
+          </td>
+          <td>
+            <%= book['cnt'] %>
           </td>
           <td>
             <input type="submit" value="更新">

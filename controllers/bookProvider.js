@@ -26,7 +26,15 @@ module.exports = {
 
   get_contents: function () {
     return libraries.findAll({
-      limit: 10
+      attributes: { include: [[models.sequelize.fn('COUNT', models.sequelize.col('Comments.book_id')), 'cnt']] },
+      group: ['Library.id'],
+      raw: true,
+      subQuery: false,
+      limit: 10,
+      include: {
+        model: models.Comment,
+        attributes: []
+      },
     });
   },
   view: function (req, res) {
