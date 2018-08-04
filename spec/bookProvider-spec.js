@@ -1,8 +1,12 @@
 /* eslint-env jasmine */
+
+// bookProvider.js テスト対象を読み込む
 const book = require('../controllers/bookProvider');
 
 describe('#bookProvider', () => {
   let req, res;
+
+  // 毎回、利用する変数の初期化  
   beforeEach(() => {
     req = {
       body: {
@@ -21,6 +25,7 @@ describe('#bookProvider', () => {
     };
   });
 
+  // /books/:id では指定された一つの書籍および付随するコメントを取得
   describe('#find', () => {
     describe('#read_content', () => {
       it('ID=1 の本とコメントを入手する', (done) => {
@@ -49,6 +54,7 @@ describe('#bookProvider', () => {
     });
   });
 
+  // /books/ は、登録されている書籍の一覧を取得
   describe('#view', () => {
     describe('#get_contents', () => {
       it('2冊以上の本が登録されている', (done) => {
@@ -73,6 +79,7 @@ describe('#bookProvider', () => {
     });
   });
 
+  // /books/create では、1件新規に書籍情報を登録する
   describe('#create', () => {
     describe('#validate()', () => {
       it('入力された値に問題がない', () => {
@@ -125,7 +132,10 @@ describe('#bookProvider', () => {
         book.create(req, res);
       });
     });
+  });
 
+  // /books/update/:id で指定された書籍の情報を更新する
+  describe('#update', () => {
     describe('#update_book', () => {
       it('本の内容を編集できる', (done) => {
         req.body.book_title = '編集タイトル';
@@ -143,7 +153,10 @@ describe('#bookProvider', () => {
         book.update(req, res);
       });
     });
+  });
 
+  // /books/destroy/:id で指定された書籍を削除する
+  describe('#destroy', () => {
     describe('#remove_book', () => {
       it('正常に削除されている', (done) => {
         book.register_book(req.body).then(result => {
