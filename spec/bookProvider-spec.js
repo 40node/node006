@@ -99,14 +99,12 @@ describe('#bookProvider', () => {
       expect(req.body.image_url).toBe('http://example.com/');
     });
   });
-  describe('when some parameter is wrong', () => {
-    // 書籍にはタイトルが必須という要件のテスト
-    it('should get the result is false', () => {
-      req.body.book_title = '';
-      const result = book.validate(req.body);
-      expect(result).toBe(false);
-      expect(req.body.errors).toEqual(['本のタイトルが入っていません']);
-    });
+  // 書籍にはタイトルが必須という要件のテスト
+  it('should get the result is false', () => {
+    req.body.book_title = '';
+    const result = book.validate(req.body);
+    expect(result).toBe(false);
+    expect(req.body.errors).toEqual(['本のタイトルが入っていません']);
   });
   describe('#register_book', () => {
     // 本を登録できると、登録された内容が確認できる

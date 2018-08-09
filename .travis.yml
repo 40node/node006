@@ -1,6 +1,7 @@
 language: node_js
 node_js:
-- "10.7"
+- "10.8"
+- "8.11.3"
 before_install:
 before_script:
   - "npm install"
