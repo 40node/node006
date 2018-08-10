@@ -1,5 +1,5 @@
 @startuml database
-package database <<Database>> {
+package 蔵書データベース <<Database>> {
   entity libraries {
     + id
     --
@@ -21,5 +21,5 @@ package database <<Database>> {
     updated_at
   }
 }
-libraries -ri-|{ comments : 本のメモ >
+libraries -ri-|{ comments : 1 .. n
 @enduml

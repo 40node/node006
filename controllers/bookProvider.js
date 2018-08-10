@@ -39,7 +39,7 @@ module.exports = {
   // 登録されている本の一覧と、コメント数を取得する
   get_contents: function () {
     return libraries.findAll({
-      attributes: { include: [[models.sequelize.fn('COUNT', models.sequelize.col('Comments.book_id')), 'cnt']] },
+      attributes: ['id', 'book_title', 'author', [models.sequelize.fn('COUNT', models.sequelize.col('Comments.book_id')), 'cnt']],
       group: ['Library.id'],
       raw: true,
       subQuery: false,
