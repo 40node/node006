@@ -1,62 +1,86 @@
-<!DOCTYPE html>
-<html>
+<%- include('./header', {header:'本の一覧'}) %>
 
-<head>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
-</head>
+  <body>
+    <p>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-1"></div>
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h2>蔵書の一覧</h2>
+            </div>
+            <div class="panel-body">
+              <table class="table table-hover">
+                <tr class="active">
+                  <th>ID</th>
+                  <th>本のタイトル</th>
+                  <th>著者</th>
+                  <th>出版社</th>
+                  <th>コメント数</th>
+                  <th></th>
+                </tr>
+                <% books.forEach(book => { %>
+                  <tr>
+                    <form action="/books/update/<%= book['id'] %>" method="post">
+                      <td>
+                        <a href="/books/<%= book['id'] %>">
+                          <%= book[ 'id'] %>
+                        </a>
+                      </td>
+                      <td>
+                        <input type="text" name="book_title" value="<%= book['book_title'] %>">
+                      </td>
+                      <td>
+                        <input type="text" name="author" value="<%= book['author'] %>">
+                      </td>
+                      <td>
+                        <input type="text" name="publisher" value="<%= book['publisher'] %>">
+                      </td>
+                      <td>
+                        <%= book['cnt'] %>
+                      </td>
+                      <td>
+                        <input class="btn btn-default" type="submit" value="更新">
+                        <a class="btn btn-danger" href="/books/destroy/<%= book['id'] %>">削除</a>
+                      </td>
+                    </form>
+                  </tr>
+                  <% }); %>
+              </table>
+            </div>
+          </div>
+          <div class="col-sm-1"></div>
+        </div>
+      </div>
+    </p>
 
-<body>
-  <h1>
-    本の一覧
-  </h1>
-  <form action="/books/create" method="post">
-    <label for="book_title">本のタイトル: </label>
-    <input id="book_title" type="text" name="book_title" value="">
-    <label for="author">著者: </label>
-    <input id="author" type="text" name="author" value="">
-    <label for="publisher">出版社: </label>
-    <input id="publisher" type="text" name="publisher" value="">
-    <input type="submit" value="新規追加">
-  </form>
+    <div class="container">
+      <div class="row">
+        <div class="panel panel-primary">
+          <div class="panel-heading">本の新規登録</div>
+          <div class="panel-body">
+            <form action="/books/create" method="post">
+              <div class="col-sm-4">
+                <label for="book_title">本のタイトル: </label>
+                <input id="book_title" type="text" name="book_title" value="">
+              </div>
+              <div class="col-sm-3">
+                <label for="author">著者: </label>
+                <input id="author" type="text" name="author" value="">
+              </div>
+              <div class="col-sm-3">
+                <label for="publisher">出版社: </label>
+                <input id="publisher" type="text" name="publisher" value="">
+              </div>
+              <div class="col-sm-2">
+                <input class="btn btn-primary" type="submit" value="新規追加">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>本のタイトル</th>
-      <th>著者</th>
-      <th>出版社</th>
-      <th>コメント数</th>
-      <th></th>
-    </tr>
-    <% books.forEach(book => { %>
-      <tr>
-        <form action="/books/update/<%= book['id'] %>" method="post">
-          <td>
-            <a href="/books/<%= book['id'] %>">
-              <%= book[ 'id'] %>
-            </a>
-          </td>
-          <td>
-            <input type="text" name="book_title" value="<%= book['book_title'] %>">
-          </td>
-          <td>
-            <input type="text" name="author" value="<%= book['author'] %>">
-          </td>
-          <td>
-            <input type="text" name="publisher" value="<%= book['publisher'] %>">
-          </td>
-          <td>
-            <%= book['cnt'] %>
-          </td>
-          <td>
-            <input type="submit" value="更新">
-            <a href="/books/destroy/<%= book['id'] %>">削除</a>
-          </td>
-        </form>
-      </tr>
-      <% }); %>
-  </table>
+  </body>
 
-</body>
-
-</html>
+  </html>

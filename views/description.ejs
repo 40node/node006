@@ -1,55 +1,60 @@
-<!DOCTYPE html>
-<html>
+<%- include('./header', {header:title}) %>
 
-<head>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
-</head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3>
+              <%= title %> の詳細</h3>
+          </div>
+          <div class="panel-body">
+            <table class="table">
+              <tr class="active">
+                <th>ID</th>
+                <th>本のタイトル</th>
+                <th>著者</th>
+                <th>出版社</th>
+              </tr>
+              <tr>
+                <td>
+                  <%= book["id"] %>
+                </td>
+                <td>
+                  <%= book['book_title'] %>
+                </td>
+                <td>
+                  <%= book['author'] %>
+                </td>
+                <td>
+                  <%= book['publisher'] %>
+                </td>
+              </tr>
+            </table>
 
-<body>
-  <h1>
-    <%= title %> の詳細
-  </h1>
+            <table class="table table-hover">
+              <tr class="active">
+                <th>ID</th>
+                <th>コメント</th>
+              </tr>
+              <% book.Comments.forEach(comment => { %>
+                <tr>
+                  <td>
+                    <%= comment["id"] %>
+                  </td>
+                  <td>
+                    <%= comment["comment"] %>
+                  </td>
+                </tr>
+                <% }); %>
+            </table>
+          </div>
+        </div>
+        <div class="col-sm-1"></div>
+      </div>
+    </div>
 
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>本のタイトル</th>
-      <th>著者</th>
-      <th>出版社</th>
-    </tr>
-    <tr>
-      <td>
-        <%= book["id"] %>
-      </td>
-      <td>
-        <%= book['book_title'] %>
-      </td>
-      <td>
-        <%= book['author'] %>
-      </td>
-      <td>
-        <%= book['publisher'] %>
-      </td>
-    </tr>
-  </table>
+  </body>
 
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>コメント</th>
-    </tr>
-    <% book.Comments.forEach(comment => { %>
-      <tr>
-        <td>
-          <%= comment["id"] %>
-        </td>
-        <td>
-          <%= comment["comment"] %>
-        </td>
-      </tr>
-      <% }); %>
-  </table>
-
-</body>
-
-</html>
+  </html>

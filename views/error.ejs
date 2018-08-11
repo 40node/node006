@@ -1,3 +1,23 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<%- include('./header', {header:'エラー画面'}) %>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-1"></div>
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          <h3>
+            <%= message %>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <p>
+            <%= error.status %>
+          </p>
+          <pre><%= error.stack %></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  </body>
+
+  </html>
