@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "build": "sequelize db:migrate",
-    "build-dev": "sequelize db:seed:all",
+    "migrate": "sequelize db:migrate",
+    "seed": "sequelize db:seed:all",
+    "build": "npm run migrate && npm run seed",
     "clean": "sequelize db:seed:undo:all",
-    "build-all": "npm run build && npm run clean && npm run build-dev",
-    "test": "npm run build-all && jasmine"
+    "retest": "npm run clean && npm run build && npm test",
+    "test": "jasmine"
   },
   "engines": {
     "node": "10.1.0"
