@@ -4,10 +4,14 @@ class bookProvider {
     book_title
     author
     publisher
+    isbn_10
+    isbn_13
     image_uml
+    -convert_parameter()
+    +index()
     +create()
-    +find()
-    +view()
+    +show()
+    +search()
     +edit()
     +destroy()
 }
@@ -16,6 +20,7 @@ class commentProvider {
     comment
     +create()
     +find()
+    +edit()
     +destroy()
 }
 

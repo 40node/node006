@@ -31,3 +31,5 @@ module.exports = {
     return queryInterface.bulkDelete('comments', null, {});
   }
 };
+
+
