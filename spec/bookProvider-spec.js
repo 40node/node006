@@ -6,7 +6,7 @@ const book = require('../controllers/bookProvider');
 describe('#bookProvider', () => {
   let req, res;
 
-  // 毎回、利用する変数の初期化  
+  // 毎回、利用する変数の初期化
   beforeEach(() => {
     req = {
       // req.body には、フォームからのインプット情報が含まれる
@@ -57,6 +57,15 @@ describe('#bookProvider', () => {
         done();
       };
       // モック設定後に、対象の関数をコールする
+      book.find(req, res);
+    });
+    it('should view an error page', (done) => {
+      req.params.id = null;
+      res.render = (view, stacks) => {
+        expect(view).toBe('error');
+        expect(stacks.message).toBe('エラーが発生しました.');
+        done();
+      };
       book.find(req, res);
     });
   });
