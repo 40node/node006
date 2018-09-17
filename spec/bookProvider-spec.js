@@ -60,6 +60,7 @@ describe('#bookProvider', () => {
       book.find(req, res);
     });
     it('should view an error page', (done) => {
+      // 対象の本がない場合には、エラー画面が返ってくることを期待する
       req.params.id = null;
       res.render = (view, stacks) => {
         expect(view).toBe('error');
