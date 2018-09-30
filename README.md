@@ -1,5 +1,5 @@
 # library_management
-シェルスクリプトマガジン Vol.56 サンプルプログラム
+シェルスクリプトマガジン Vol.57 サンプルプログラム
 
 [![CircleCI](https://circleci.com/gh/40node/library_management.svg?style=svg)](https://circleci.com/gh/40node/library_management)
 [![Build Status](https://travis-ci.org/40node/library_management.svg?branch=master)](https://travis-ci.org/40node/library_management)
