@@ -35,8 +35,9 @@ describe('POST /books/create', () => {
   it('respond with http', (done) => {
     request(app)
       .post('/books/create')
+      .send({book_title: 'test'})
       .set('Accept', 'text/html')
-      .expect(200, done);
+      .expect(302, done);
   });
 });
 
