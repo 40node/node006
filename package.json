@@ -20,18 +20,18 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "ejs": "~2.5.7",
-    "express": "^4.16.3",
-    "jasmine": "^3.2.0",
-    "morgan": "~1.9.0",
-    "pg": "^7.4.3",
-    "sequelize": "^4.38.0",
+    "express": "^4.16.4",
+    "jasmine": "^3.3.0",
+    "morgan": "^1.9.1",
+    "pg": "^7.6.1",
+    "sequelize": "^4.41.2",
     "sequelize-cli": "^4.1.1",
     "serve-favicon": "~2.4.5",
-    "supertest": "^3.1.0"
+    "supertest": "^3.3.0"
   },
   "devDependencies": {
-    "codacy-coverage": "^3.0.0",
+    "codacy-coverage": "^3.3.0",
     "istanbul": "^0.4.5",
-    "sqlite3": "^4.0.2"
+    "sqlite3": "^4.0.4"
   }
 }

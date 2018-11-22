@@ -9,11 +9,11 @@
 
 当サンプルプログラムは、次の環境での実行を確認しています。
 
-- node.js 10.10.0 / 8.11.4
-- sqlite3 v4.0.2 (ローカルで実行する場合に必要です)
+- node.js 10.13.0 / 11.2.0
+- sqlite3 v4.0.4 (ローカルで実行する場合に必要です)
 - postgresql v10.4 (本番環境としてローカルかHerokuで実行する場合に必要です)
 - macOS High Sierra 10.13.6
-- Heroku-16 Stack (Ubuntu 16.04)
+- Heroku-18 Stack (Ubuntu 18.04)
 
 # 当サンプルプログラムの使い方
 
