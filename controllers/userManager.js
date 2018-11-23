@@ -1,0 +1,147 @@
+// model 情報の読み込み
+const models = require('../models');
+const users = models.user;
+const libraries = models.Library;
+const comments = models.Comment;
+
+// すべての関数をテスト利用できるように exports 対象とする
+module.exports = {
+
+  // 1冊のユーザー情報を取得する  
+  get_user: function (user_id) {
+    return libraries.findOne({
+      where: {
+        id: user_id
+      },
+      include: [{
+        model: libraries,
+        required: false
+      }]
+    });
+  },
+  // 1冊の本の詳細を表示する
+  find: function (req, res) {
+    module.exports.get_user(req.params.id)
+      .then(result => {
+        res.render('description', {
+          title: result.user_title,
+          user: result
+        });
+      }).catch(() => {
+        res.render('error', {
+          message: 'エラーが発生しました.',
+          error: {
+            status: '本がありませんでした.',
+          }
+        });
+      });
+  },
+
+  // 登録されている本の一覧と、コメント数を取得する
+  get_contents: function () {
+    return users.findAll({
+      attributes: ['id', 'email', 'password'],
+      group: ['user.id'],
+      raw: true,
+      subQuery: false,
+      limit: 10,
+      include: {
+        model: models.Library,
+        attributes: []
+      },
+    });
+  },
+  // 登録されている本の一覧を表示する
+  view: function (req, res) {
+    module.exports.get_contents()
+      .then(results => {
+        res.render('user_view', {
+          users: results
+        });
+      });
+  },
+
+  // パラメータが正しいかどうか検査する
+  validate: function (params) {
+    let errors = params.errors = [];
+
+    if (!params.user_title) {
+      errors.push('本のタイトルが入っていません');
+    }
+    // 画像URLがなければデフォルトを登録する
+    params.image_url = params.image_url || 'http://example.com/';
+    return errors.length === 0;
+  },
+
+  // 本を一冊登録する
+  register_user: function (user) {
+    return module.exports.validate(user) ? libraries.create(user) : Promise.reject(user.errors);
+  },
+  // 本を登録し、その結果を表示する
+  create: function (req, res) {
+    module.exports.register_user(req.body)
+      .then(result => {
+        res.redirect(`/users/${result.id}`);
+      }).catch(errors => {
+        res.render('error', {
+          message: 'エラーが発生しました.',
+          error: {
+            status: '本を登録できませんでした.',
+            stack: errors
+          }
+        });
+      });
+  },
+
+  // 対象の本の情報を更新する
+  update_user: function (id, user) {
+    if (module.exports.validate(user)) {
+      return libraries.update(user, {
+        where: {
+          id: id
+        }
+      });
+    } else {
+      return Promise.reject(user.errors);
+    }
+  },
+  // 本の情報を更新し、その結果を表示する
+  update: function (req, res) {
+    module.exports.update_user(req.params.id, req.body)
+      .then(() => {
+        res.redirect(`/users/${req.params.id}`);
+      }).catch(errors => {
+        res.render('error', {
+          message: 'エラーが発生しました.',
+          error: {
+            status: '本を登録できませんでした.',
+            stack: errors
+          }
+        });
+      });
+  },
+
+  // 1冊の本を削除する
+  remove_user: function (id) {
+    return libraries.destroy({
+      where: {
+        id: id
+      }
+    });
+  },
+  // 該当の本を削除し、その結果を表示する
+  destroy: function (req, res) {
+    module.exports.remove_user(req.params.id)
+      .then(() => {
+        res.redirect('/users/');
+      }).catch(errors => {
+        res.render('error', {
+          message: 'エラーが発生しました.',
+          error: {
+            status: '本を削除できませんでした.',
+            stack: errors
+          }
+        });
+      });
+  }
+};
