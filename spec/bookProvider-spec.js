@@ -14,6 +14,7 @@ describe('#bookProvider', () => {
         book_title: 'title',
         author: 'しょっさん',
         publisher: 'USP研究所',
+        user_id: 1,
         image_uml: ''
       },
       // req.params には、URI で指定したパラメータ情報が含まれる
