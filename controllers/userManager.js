@@ -3,10 +3,15 @@ const models = require('../models');
 const users = models.user;
 const libraries = models.Library;
 
+// パスワードハッシュ化
+const crypto = require('crypto');
+const secret = process.env.SECRET || '40node';
+const hash = (key) => { return crypto.createHmac('sha256', secret).update(key).digest('hex'); };
+
 // すべての関数をテスト利用できるように exports 対象とする
 module.exports = {
 
-  // ユーザー情報を取得する  
+  // ユーザー情報を取得する
   get_user: function (user_id) {
     return users.findOne({
       where: {
@@ -68,6 +73,8 @@ module.exports = {
     }
     if (!params.password) {
       errors.push('パスワードが入っていません');
+    } else {
+      params.password = hash(params.password);
     }
     return errors.length === 0;
   },

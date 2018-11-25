@@ -9,9 +9,9 @@ var models = require('./models');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+// パスワードハッシュ化
 const crypto = require('crypto');
 const secret = process.env.SECRET || '40node';
-
 const hash = (key) => { return crypto.createHmac('sha256', secret).update(key).digest('hex'); };
 
 var index = require('./routes/index');
