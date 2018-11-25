@@ -6,8 +6,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var models = require('./models');
-var passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
+const crypto = require('crypto');
+const secret = process.env.SECRET || '40node';
+
+const hash = (key) => { return crypto.createHmac('sha256', secret).update(key).digest('hex'); };
 
 var index = require('./routes/index');
 var books = require('./routes/books');
@@ -43,7 +48,7 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false, { message: 'Incorrect email.' });
       }
-      if (password !== user.password) {
+      if (hash(password) !== user.password) {
         return done(null, false, { message: 'Incorrect password.' });
       }
       return done(null, user.get());

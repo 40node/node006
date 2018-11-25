@@ -7,17 +7,17 @@ module.exports = {
       {
         id: 1,
         email: 'tak@oshiire.to',
-        password: 'password'
+        password: 'fc976378be5d56d2f5a80978f32ee85d42c497e11cac416752469a3ae9d52312'
       },
       {
         id: 2,
         email: 'sho@oshiire.to',
-        password: 'password'
+        password: 'fc976378be5d56d2f5a80978f32ee85d42c497e11cac416752469a3ae9d52312'
       },
       {
         id: 3,
         email: 'shosan@oshiire.to',
-        password: 'password'
+        password: 'fc976378be5d56d2f5a80978f32ee85d42c497e11cac416752469a3ae9d52312'
       }
     ]);
   },
