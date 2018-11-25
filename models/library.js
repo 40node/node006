@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     user_id: DataTypes.INTEGER
   },
     {
-      underscored: true,
+      underscored: true
     });
   Library.associate = function (models) {
     // associations can be defined here

@@ -4,10 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     comment: DataTypes.TEXT,
     book_id: DataTypes.INTEGER
   }, {
-    underscored: true,
-  });
-  Comment.associate = function(models) {
-    // associations can be defined here
-  };
+      underscored: true,
+    });
+  //  Comment.associate = function(models) {
+  // associations can be defined here
+  //  };
   return Comment;
 };
