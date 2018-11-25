@@ -1,7 +1,8 @@
 /* eslint-env jasmine */
 
-// bookProvider.js テスト対象を読み込む
-const book = require('../controllers/bookProvider');
+// bookProvider.js テスト対象をRewireで読み込む
+const rewire = require('rewire');
+const book = rewire('../controllers/bookProvider');
 
 describe('#bookProvider', () => {
   let req, res;
@@ -34,8 +35,10 @@ describe('#bookProvider', () => {
 
   // /books/:id では指定された一つの書籍および付随するコメントを取得
   describe('#read_content', () => {
+    get_book = book.__get__('get_book'); // rewire
+
     it('should get content with id eq 1', (done) => {
-      book.get_book(1, 1)
+      get_book(1, 1)
         .then(result => {
           expect(result.id).toBe(1);
           // id = 1 の書籍は 3件のコメントがあるはず
@@ -44,7 +47,7 @@ describe('#bookProvider', () => {
         }).catch(done.fail);
     });
     it('should get null', (done) => {
-      book.get_book(null)
+      get_book(null)
         .then(result => {
           // 対象がない場合、NULL が返ってくることを期待する
           expect(result).toBeNull();
@@ -77,9 +80,10 @@ describe('#bookProvider', () => {
 
   // /books/ は、登録されている書籍の一覧を取得
   describe('#get_contents', () => {
+    const get_contents = book.__get__('get_contents');
     // すべてのテストが非同期並列実行されるため、厳密な冊数を指定できない
     it('should get two or more contents', (done) => {
-      book.get_contents(req.user.id)
+      get_contents(req.user.id)
         .then(results => {
           // 少なくとも 2冊は登録されている
           expect(results.length).toBeGreaterThanOrEqual(2);
@@ -106,25 +110,27 @@ describe('#bookProvider', () => {
 
   // /books/create では、1件新規に書籍情報を登録する
   describe('#validate', () => {
+    const validate = book.__get__('validate');
     // 検証された結果
     it('should get the result is true', () => {
-      const result = book.validate(req.body);
+      const result = validate(req.body);
       expect(result).toBe(true);
       expect(req.body.image_url).toBe('http://example.com/');
     });
-  });
-  // 書籍にはタイトルが必須という要件のテスト
-  it('should get the result is false', () => {
-    req.body.book_title = '';
-    const result = book.validate(req.body);
-    expect(result).toBe(false);
-    expect(req.body.errors).toEqual(['本のタイトルが入っていません']);
+    // 書籍にはタイトルが必須という要件のテスト
+    it('should get the result is false', () => {
+      req.body.book_title = '';
+      const result = validate(req.body);
+      expect(result).toBe(false);
+      expect(req.body.errors).toEqual(['本のタイトルが入っていません']);
+    });
   });
   describe('#register_book', () => {
+    const register_book = book.__get__('register_book');
     // 本を登録できると、登録された内容が確認できる
     it('should get the result is book information', (done) => {
       req.body.user_id = 1;
-      book.register_book(req.body).then(result => {
+      register_book(req.body).then(result => {
         expect(result.book_title).toBe('title');
         expect(result.id).toBeGreaterThanOrEqual(2);
         expect(result.image_url).toBe('http://example.com/');
@@ -134,7 +140,7 @@ describe('#bookProvider', () => {
     // 本のタイトルがなければ登録できません
     it('should catch an error', (done) => {
       req.body.book_title = '';
-      book.register_book(req.body).then(done.fail)
+      register_book(req.body).then(done.fail)
         .catch(result => {
           expect(result).toEqual(['本のタイトルが入っていません']);
           done();
@@ -162,9 +168,10 @@ describe('#bookProvider', () => {
 
   // /books/update/:id で指定された書籍の情報を更新する
   describe('#update', () => {
+    const update_book = book.__get__('update_book');
     it('should number of book eq 1 when updating a book', (done) => {
       req.body.book_title = '編集タイトル';
-      book.update_book(req.params.id, req.body).then(result => {
+      update_book(req.params.id, req.body).then(result => {
         expect(result.length).toBe(1);
         expect(result[0]).toBe(1);
         done();
@@ -181,17 +188,20 @@ describe('#bookProvider', () => {
 
   // /books/destroy/:id で指定された書籍を削除する
   describe('#remove_book', () => {
+    const register_book = book.__get__('register_book');
+    const remove_book = book.__get__('remove_book');
     it('should number of book eq 1 after it removes a book', (done) => {
       req.body.user_id = 1;
-      book.register_book(req.body).then(result => {
-        book.remove_book(result.id).then(num => {
+
+      register_book(req.body).then(result => {
+        remove_book(result.id).then(num => {
           expect(num).toBe(1);
           done();
         }).catch(done.fail);
       }).catch(done.fail);
     });
     it('should get an error if it remove a book having comments', (done) => {
-      book.remove_book(1).then(done.fail)
+      remove_book(1).then(done.fail)
         .catch(result => {
           expect(result.name).toBe('SequelizeForeignKeyConstraintError');
           done();
@@ -199,9 +209,11 @@ describe('#bookProvider', () => {
     });
   });
   describe('#destroy', () => {
+    const register_book = book.__get__('register_book');
+
     it('should redirect the view page after it removes the book', (done) => {
       req.body.user_id = 1;
-      book.register_book(req.body).then(result => {
+      register_book(req.body).then(result => {
         req.params.id = result.id;
         res.redirect = (uri) => {
           expect(uri).toBe('/books/');

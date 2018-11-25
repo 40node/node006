@@ -8,15 +8,15 @@ const app = require('../app');
 const userCredentials = {
   email: 'tak@oshiire.to',
   password: 'password'
-}
+};
 const wrongEmailCredentials = {
   email: 'foo',
   password: 'password'
-}
+};
 const wrongPasswordCredentials = {
   email: 'tak@oshiire.to',
   password: ''
-}
+};
 
 //now let's login the user before we run any tests
 var authenticatedUser = request(app);
@@ -50,7 +50,7 @@ describe('POST /login', () => {
       .expect(302)
       .expect('Location', '/', done);
   });
-})
+});
 
 describe('GET /', () => {
   it('respond with http', (done) => {

@@ -45,22 +45,20 @@ passport.use(new LocalStrategy(
   },
   (username, password, done) => {
     models.user.findOne({ where: { email: username } }).then(user => {
-      if (!user) {
+      if (!user)
         return done(null, false, { message: 'Incorrect email.' });
-      }
-      if (hash(password) !== user.password) {
+      if (hash(password) !== user.password)
         return done(null, false, { message: 'Incorrect password.' });
-      }
       return done(null, user.get());
     }).catch(err => done(err));
   }
 ));
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser(function (id, done) {
+passport.deserializeUser((id, done) => {
   models.user.findById(id).then(user => {
     if (user) {
       done(null, user.get());
@@ -89,14 +87,14 @@ app.use('/books', books);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
