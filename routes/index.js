@@ -16,11 +16,8 @@ router.post('/login',
 );
 
 router.get('/logout', (req, res) => {
-  if (req.isAuthenticated()) {
-    console.log(req.isAuthenticated());
-    console.log(req.user);
-  }
-  req.logout();
+  if (req.isAuthenticated())
+    req.logout();
   res.redirect('/');
 });
 
