@@ -9,6 +9,15 @@ const userCredentials = {
   email: 'tak@oshiire.to',
   password: 'password'
 }
+const wrongEmailCredentials = {
+  email: 'foo',
+  password: 'password'
+}
+const wrongPasswordCredentials = {
+  email: 'tak@oshiire.to',
+  password: ''
+}
+
 //now let's login the user before we run any tests
 var authenticatedUser = request(app);
 
@@ -18,6 +27,30 @@ beforeAll((done) => {
     .send(userCredentials)
     .expect(302, done);
 });
+
+describe('POST /login', () => {
+  it('should success login with correct user', (done) => {
+    request(app)
+      .post('/login')
+      .send(userCredentials)
+      .expect(302)
+      .expect('Location', '/books/', done);
+  });
+  it('should deny login with wrong email', (done) => {
+    request(app)
+      .post('/login')
+      .send(wrongEmailCredentials)
+      .expect(302)
+      .expect('Location', '/', done);
+  });
+  it('should deny login with wrong password', (done) => {
+    request(app)
+      .post('/login')
+      .send(wrongPasswordCredentials)
+      .expect(302)
+      .expect('Location', '/', done);
+  });
+})
 
 describe('GET /', () => {
   it('respond with http', (done) => {

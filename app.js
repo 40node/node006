@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // add initialize session and passport
-app.use(session({ secret: "40node" }));
+app.use(session({ secret: '40node' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -91,7 +91,7 @@ app.use(function (req, res, next) {
 });
 
 // error handler
-app.use(function (err, req, res) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
