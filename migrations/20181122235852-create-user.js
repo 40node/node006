@@ -1,35 +1,21 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Libraries', {
+    return queryInterface.createTable('users', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      book_title: {
+      email: {
         type: Sequelize.STRING
       },
-      author: {
+      password: {
         type: Sequelize.STRING
       },
-      publisher: {
-        type: Sequelize.STRING
-      },
-      image_url: {
-        type: Sequelize.STRING(2048)
-      },
-      user_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        foreignKey: true,
-        references: {
-          model: 'users',
-          key: 'id',
-        },
-        onUpdate: 'RESTRICT',
-        onDelete: 'RESTRICT',
+      admin: {
+        type: Sequelize.BOOLEAN
       },
       created_at: {
         allowNull: false,
@@ -42,6 +28,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Libraries');
+    return queryInterface.dropTable('users');
   }
 };

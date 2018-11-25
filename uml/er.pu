@@ -1,5 +1,16 @@
 @startuml database
 package 蔵書データベース <<Database>> {
+  entity users {
+    + id
+    --
+    email
+    password
+    admin
+    ..
+    created_at
+    updated_at
+
+  }
   entity libraries {
     + id
     --
@@ -7,6 +18,7 @@ package 蔵書データベース <<Database>> {
     author
     publisher
     image_url
+    * user_id
     ..
     created_at
     updated_at
@@ -21,5 +33,6 @@ package 蔵書データベース <<Database>> {
     updated_at
   }
 }
+users -ri-|{ libraries : 1 .. n
 libraries -ri-|{ comments : 1 .. n
 @enduml

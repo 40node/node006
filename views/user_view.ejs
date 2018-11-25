@@ -1,0 +1,75 @@
+  <%- include('./header', {header:'ユーザアカウント一覧'}) %>
+
+  <body>
+  <p>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-1"></div>
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h2>ユーザアカウントの一覧</h2>
+        </div>
+        <div class="panel-body">
+          <table class="table table-hover">
+            <tr class="active">
+              <th>ID</th>
+              <th>ユーザアカウント(メール)</th>
+              <th>パスワード</th>
+            </tr>
+            <% users.forEach(user => { %>
+              <tr>
+                <form action="/users/update/<%= user['id'] %>" method="post">
+                  <td>
+                    <a href="/users/<%= user['id'] %>">
+                      <%= user[ 'id'] %>
+                    </a>
+                  </td>
+                  <td>
+                    <input type="text" name="email" value="<%= user['email'] %>">
+                  </td>
+                  <td>
+                    <input type="password" name="password" value="<%= user['password'] %>">
+                  </td>
+                  <td>
+                    <input class="btn btn-default" type="submit" value="更新">
+                    <a class="btn btn-danger" href="/users/destroy/<%= user['id'] %>">削除</a>
+                  </td>
+                </form>
+              </tr>
+              <% }); %>
+          </table>
+        </div>
+      </div>
+      <div class="col-sm-1"></div>
+    </div>
+  </div>
+</p>
+
+<p>
+      <div class="container">
+        <div class="row">
+          <div class="panel panel-primary">
+            <div class="panel-heading">ユーザアカウントの登録</div>
+            <div class="panel-body">
+              <form action="/users/create" method="post">
+                <div class="col-sm-4">
+                  <label for="email">アカウント(メールアドレス): </label>
+                  <input id="email" type="text" name="email" value="">
+                </div>
+                <div class="col-sm-3">
+                  <label for="password">パスワード</label>
+                  <input id="password" type="password" name="password" value="">
+                </div>
+                <div class="col-sm-2">
+                  <input class="btn btn-primary" type="submit" value="新規追加">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      </p>
+
+    </body>
+
+</html>
