@@ -19,6 +19,22 @@ module.exports = {
         publisher: 'USP研究所',
         user_id: 1,
         image_uml: 'https://uec.usp-lab.com/INFO/IMG/SHELLSCRIPTMAG_VOL55.JPG'
+      },
+      {
+        id: 3,
+        book_title: 'シェルスクリプトマガジン vol.56',
+        author: 'しょっさん',
+        publisher: 'USP研究所',
+        user_id: 2,
+        image_uml: 'https://uec.usp-lab.com/INFO/IMG/SHELLSCRIPTMAG_VOL54.JPG'
+      },
+      {
+        id: 4,
+        book_title: 'シェルスクリプトマガジン vol.57',
+        author: 'しょっさん',
+        publisher: 'USP研究所',
+        user_id: 3,
+        image_uml: 'https://uec.usp-lab.com/INFO/IMG/SHELLSCRIPTMAG_VOL54.JPG'
       }
     ]);
   },

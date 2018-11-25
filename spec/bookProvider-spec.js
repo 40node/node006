@@ -14,8 +14,11 @@ describe('#bookProvider', () => {
         book_title: 'title',
         author: 'しょっさん',
         publisher: 'USP研究所',
-        user_id: 1,
         image_uml: ''
+      },
+      user: {
+        id: 1,
+        email: 'tak@oshiire.to'
       },
       // req.params には、URI で指定したパラメータ情報が含まれる
       params: {
@@ -32,7 +35,7 @@ describe('#bookProvider', () => {
   // /books/:id では指定された一つの書籍および付随するコメントを取得
   describe('#read_content', () => {
     it('should get content with id eq 1', (done) => {
-      book.get_book(1)
+      book.get_book(1, 1)
         .then(result => {
           expect(result.id).toBe(1);
           // id = 1 の書籍は 3件のコメントがあるはず
@@ -76,7 +79,7 @@ describe('#bookProvider', () => {
   describe('#get_contents', () => {
     // すべてのテストが非同期並列実行されるため、厳密な冊数を指定できない
     it('should get two or more contents', (done) => {
-      book.get_contents()
+      book.get_contents(req.user.id)
         .then(results => {
           // 少なくとも 2冊は登録されている
           expect(results.length).toBeGreaterThanOrEqual(2);
@@ -120,6 +123,7 @@ describe('#bookProvider', () => {
   describe('#register_book', () => {
     // 本を登録できると、登録された内容が確認できる
     it('should get the result is book information', (done) => {
+      req.body.user_id = 1;
       book.register_book(req.body).then(result => {
         expect(result.book_title).toBe('title');
         expect(result.id).toBeGreaterThanOrEqual(2);
@@ -178,6 +182,7 @@ describe('#bookProvider', () => {
   // /books/destroy/:id で指定された書籍を削除する
   describe('#remove_book', () => {
     it('should number of book eq 1 after it removes a book', (done) => {
+      req.body.user_id = 1;
       book.register_book(req.body).then(result => {
         book.remove_book(result.id).then(num => {
           expect(num).toBe(1);
@@ -195,6 +200,7 @@ describe('#bookProvider', () => {
   });
   describe('#destroy', () => {
     it('should redirect the view page after it removes the book', (done) => {
+      req.body.user_id = 1;
       book.register_book(req.body).then(result => {
         req.params.id = result.id;
         res.redirect = (uri) => {

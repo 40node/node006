@@ -7,19 +7,19 @@ module.exports = {
       {
         id: 1,
         email: 'tak@oshiire.to',
-        password: ''
+        password: 'password'
+      },
+      {
+        id: 2,
+        email: 'sho@oshiire.to',
+        password: 'password'
+      },
+      {
+        id: 3,
+        email: 'shosan@oshiire.to',
+        password: 'password'
       }
-    ])
-    /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.bulkInsert('Person', [{
-        name: 'John Doe',
-        isBetaMember: false
-      }], {});
-    */
+    ]);
   },
 
   down: (queryInterface, Sequelize) => {

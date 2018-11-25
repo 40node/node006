@@ -6,10 +6,11 @@ const comments = models.Comment;
 // すべての関数をテスト利用できるように exports 対象とする
 module.exports = {
 
-  // 1冊の本の情報を取得する  
-  get_book: function (book_id) {
+  // 1冊の本の情報を取得する
+  get_book: function (user_id, book_id) {
     return libraries.findOne({
       where: {
+        user_id: user_id,
         id: book_id
       },
       include: [{
@@ -20,7 +21,7 @@ module.exports = {
   },
   // 1冊の本の詳細を表示する
   find: function (req, res) {
-    module.exports.get_book(req.params.id)
+    module.exports.get_book(req.user.id, req.params.id)
       .then(result => {
         res.render('description', {
           title: result.book_title,
@@ -37,13 +38,16 @@ module.exports = {
   },
 
   // 登録されている本の一覧と、コメント数を取得する
-  get_contents: function () {
+  get_contents: function (user_id) {
     return libraries.findAll({
       attributes: ['id', 'book_title', 'author', 'publisher', [models.sequelize.fn('COUNT', models.sequelize.col('Comments.book_id')), 'cnt']],
       group: ['Library.id'],
       raw: true,
       subQuery: false,
       limit: 10,
+      where: {
+        user_id: user_id
+      },
       include: {
         model: models.Comment,
         attributes: []
@@ -52,7 +56,7 @@ module.exports = {
   },
   // 登録されている本の一覧を表示する
   view: function (req, res) {
-    module.exports.get_contents()
+    module.exports.get_contents(req.user.id)
       .then(results => {
         res.render('view', {
           books: results
@@ -78,6 +82,7 @@ module.exports = {
   },
   // 本を登録し、その結果を表示する
   create: function (req, res) {
+    req.body.user_id = req.user.id;
     module.exports.register_book(req.body)
       .then(result => {
         res.redirect(`/books/${result.id}`);
