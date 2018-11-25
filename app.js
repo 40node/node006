@@ -65,6 +65,20 @@ passport.deserializeUser(function (id, done) {
   });
 });
 
+// for authenticating
+app.use((req, res, next) => {
+  if (req.isAuthenticated())
+    return next();
+  switch (req.url) {
+    case '/':
+    case '/login':
+      next();
+      break;
+    default:
+      res.redirect('/');
+  }
+});
+
 app.use('/', index);
 app.use('/books', books);
 app.use('/users', users);

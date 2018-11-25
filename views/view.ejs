@@ -1,25 +1,25 @@
 <%- include('./header', {header:'本の一覧'}) %>
 
-  <body>
+<body>
   <p>
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-1"></div>
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h2>蔵書の一覧</h2>
-        </div>
-        <div class="panel-body">
-          <table class="table table-hover">
-            <tr class="active">
-              <th>ID</th>
-              <th>本のタイトル</th>
-              <th>著者</th>
-              <th>出版社</th>
-              <th>コメント数</th>
-              <th></th>
-            </tr>
-            <% books.forEach(book => { %>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h2>蔵書の一覧</h2>
+          </div>
+          <div class="panel-body">
+            <table class="table table-hover">
+              <tr class="active">
+                <th>ID</th>
+                <th>本のタイトル</th>
+                <th>著者</th>
+                <th>出版社</th>
+                <th>コメント数</th>
+                <th></th>
+              </tr>
+              <% books.forEach(book => { %>
               <tr>
                 <form action="/books/update/<%= book['id'] %>" method="post">
                   <td>
@@ -46,15 +46,15 @@
                 </form>
               </tr>
               <% }); %>
-          </table>
+            </table>
+          </div>
         </div>
+        <div class="col-sm-1"></div>
       </div>
-      <div class="col-sm-1"></div>
     </div>
-  </div>
-</p>
+  </p>
 
-    <p>
+  <p>
     <div class="container">
       <div class="row">
         <div class="panel panel-primary">
@@ -63,7 +63,7 @@
             <form action="/books/create" method="post">
               <div class="col-sm-4">
                 <label for="email">本のタイトル: </label>
-                <input id="email" type="text" name="email" value="">
+                <input id="email" type="text" name="book_title" value="">
               </div>
               <div class="col-sm-3">
                 <label for="author">著者: </label>
@@ -81,8 +81,8 @@
         </div>
       </div>
     </div>
-    </p>
+  </p>
 
-  </body>
+</body>
 
-  </html>
+</html>

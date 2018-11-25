@@ -67,7 +67,6 @@ module.exports = {
   // パラメータが正しいかどうか検査する
   validate: function (params) {
     let errors = params.errors = [];
-
     if (!params.book_title) {
       errors.push('本のタイトルが入っていません');
     }
