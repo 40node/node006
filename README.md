@@ -4,6 +4,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/30c351e173f44f8090422118462efe6a)](https://app.codacy.com/app/app107724887/node005?utm_source=github.com&utm_medium=referral&utm_content=40node/node005&utm_campaign=Badge_Grade_Dashboard)
 [![CircleCI](https://circleci.com/gh/40node/library_management.svg?style=svg)](https://circleci.com/gh/40node/library_management)
 [![Build Status](https://travis-ci.org/40node/library_management.svg?branch=master)](https://travis-ci.org/40node/library_management)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/40node/node005.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/40node/node005/alerts/)
 
 ## 前提条件
 
