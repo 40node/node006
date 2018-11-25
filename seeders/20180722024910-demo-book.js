@@ -9,6 +9,7 @@ module.exports = {
         book_title: 'シェルスクリプトマガジン vol.54',
         author: 'しょっさん',
         publisher: 'USP研究所',
+        user_id: 1,
         image_uml: 'https://uec.usp-lab.com/INFO/IMG/SHELLSCRIPTMAG_VOL54.JPG'
       },
       {
@@ -16,6 +17,7 @@ module.exports = {
         book_title: 'シェルスクリプトマガジン vol.55',
         author: 'しょっさん',
         publisher: 'USP研究所',
+        user_id: 1,
         image_uml: 'https://uec.usp-lab.com/INFO/IMG/SHELLSCRIPTMAG_VOL55.JPG'
       }
     ]);

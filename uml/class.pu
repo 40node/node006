@@ -1,5 +1,13 @@
 @startuml class
 
+class userManager {
+    email
+    password
+    +login()
+    +logout()
+
+}
+
 class bookProvider {
     book_title
     author
@@ -24,6 +32,7 @@ class commentProvider {
     +destroy()
 }
 
+userManager "1" o-right- "1..*" bookProvider : 書籍
 bookProvider "1" o-right- "0..*" commentProvider : コメント
 
 @enduml
