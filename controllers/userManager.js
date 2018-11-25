@@ -2,11 +2,13 @@
 const models = require('../models');
 const users = models.user;
 const libraries = models.Library;
+var bcrypt = require('bcrypt');
 
 // パスワードハッシュ化
-const crypto = require('crypto');
-const secret = process.env.SECRET || '40node';
-const hash = (key) => { return crypto.createHmac('sha256', secret).update(key).digest('hex'); };
+const hashPassword = (password, salt) => {
+  var hashed = bcrypt.hashSync(password, salt);
+  return hashed;
+};
 
 // すべての関数をテスト利用できるように exports 対象とする
 module.exports = {
@@ -74,7 +76,10 @@ module.exports = {
     if (!params.password) {
       errors.push('パスワードが入っていません');
     } else {
-      params.password = hash(params.password);
+      bcrypt.genSalt(10, (err, salt) => {
+        params.password = hashPassword(params.password, salt);
+        params.salt = salt;
+      });
     }
     return errors.length === 0;
   },

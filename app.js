@@ -3,6 +3,7 @@ var path = require('path');
 // var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var csurf = require('csurf')
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var models = require('./models');
@@ -10,9 +11,11 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 // パスワードハッシュ化
-const crypto = require('crypto');
-const secret = process.env.SECRET || '40node';
-const hash = (key) => { return crypto.createHmac('sha256', secret).update(key).digest('hex'); };
+const hashPassword = (password, salt) => {
+  var bcrypt = require('bcrypt');
+  var hashed = bcrypt.hashSync(password, salt);
+  return hashed;
+};
 
 var index = require('./routes/index');
 var books = require('./routes/books');
@@ -30,6 +33,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+// app.use(csurf({ cookie: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // add initialize session and passport
@@ -47,7 +51,7 @@ passport.use(new LocalStrategy(
     models.user.findOne({ where: { email: username } }).then(user => {
       if (!user)
         return done(null, false, { message: 'Incorrect email.' });
-      if (hash(password) !== user.password)
+      if (hashPassword(password, user.salt) !== user.password)
         return done(null, false, { message: 'Incorrect password.' });
       return done(null, user.get());
     }).catch(err => done(err));
@@ -74,6 +78,8 @@ app.use((req, res, next) => {
     return next();
   switch (req.url) {
     case '/':
+    case '/users/':
+    case '/users/create':
     case '/login':
       next();
       break;

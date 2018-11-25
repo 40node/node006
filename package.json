@@ -16,8 +16,10 @@
     "node": "11.2.0"
   },
   "dependencies": {
+    "bcrypt": "^3.0.2",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
+    "csurf": "^1.9.0",
     "debug": "~2.6.9",
     "ejs": "~2.5.7",
     "express": "^4.16.4",

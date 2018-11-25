@@ -7,17 +7,20 @@ module.exports = {
       {
         id: 1,
         email: 'tak@oshiire.to',
-        password: 'fc976378be5d56d2f5a80978f32ee85d42c497e11cac416752469a3ae9d52312'
+        password: '$2b$10$t73WMpPlvyhkWuL.ALWe..OKbU1q1ssR4K5ezVTXLlvaDMtUuAqve',
+        salt: '$2b$10$t73WMpPlvyhkWuL.ALWe..'
       },
       {
         id: 2,
         email: 'sho@oshiire.to',
-        password: 'fc976378be5d56d2f5a80978f32ee85d42c497e11cac416752469a3ae9d52312'
+        password: '$2b$10$t73WMpPlvyhkWuL.ALWe..OKbU1q1ssR4K5ezVTXLlvaDMtUuAqve',
+        salt: '$2b$10$t73WMpPlvyhkWuL.ALWe..'
       },
       {
         id: 3,
         email: 'shosan@oshiire.to',
-        password: 'fc976378be5d56d2f5a80978f32ee85d42c497e11cac416752469a3ae9d52312'
+        password: '$2b$10$t73WMpPlvyhkWuL.ALWe..OKbU1q1ssR4K5ezVTXLlvaDMtUuAqve',
+        salt: '$2b$10$t73WMpPlvyhkWuL.ALWe..'
       }
     ]);
   },
