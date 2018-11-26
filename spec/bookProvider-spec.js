@@ -35,7 +35,7 @@ describe('#bookProvider', () => {
 
   // /books/:id では指定された一つの書籍および付随するコメントを取得
   describe('#read_content', () => {
-    get_book = book.__get__('get_book'); // rewire
+    const get_book = book.__get__('get_book'); // rewire
 
     it('should get content with id eq 1', (done) => {
       get_book(1, 1)

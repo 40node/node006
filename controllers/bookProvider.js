@@ -15,7 +15,7 @@ const get_book = (user_id, book_id) => {
       required: false
     }]
   });
-}
+};
 // 1冊の本の詳細を表示する
 exports.find = (req, res) => {
   get_book(req.user.id, req.params.id)
@@ -32,7 +32,7 @@ exports.find = (req, res) => {
         }
       });
     });
-}
+};
 
 // 登録されている本の一覧と、コメント数を取得する
 const get_contents = user_id => {
@@ -50,7 +50,7 @@ const get_contents = user_id => {
       attributes: []
     },
   });
-}
+};
 // 登録されている本の一覧を表示する
 exports.view = (req, res) => {
   get_contents(req.user.id)
@@ -59,7 +59,7 @@ exports.view = (req, res) => {
         books: results
       });
     });
-}
+};
 
 // パラメータが正しいかどうか検査する
 const validate = params => {
@@ -70,11 +70,11 @@ const validate = params => {
   // 画像URLがなければデフォルトを登録する
   params.image_url = params.image_url || 'http://example.com/';
   return errors.length === 0;
-}
+};
 // 本を一冊登録する
 const register_book = book => {
   return validate(book) ? libraries.create(book) : Promise.reject(book.errors);
-}
+};
 // 本を登録し、その結果を表示する
 exports.create = (req, res) => {
   req.body.user_id = req.user.id;
@@ -90,7 +90,7 @@ exports.create = (req, res) => {
         }
       });
     });
-}
+};
 
 // 対象の本の情報を更新する
 const update_book = (id, book) => {
@@ -103,7 +103,7 @@ const update_book = (id, book) => {
   } else {
     return Promise.reject(book.errors);
   }
-}
+};
 // 本の情報を更新し、その結果を表示する
 exports.update = (req, res) => {
   update_book(req.params.id, req.body)
@@ -118,7 +118,7 @@ exports.update = (req, res) => {
         }
       });
     });
-}
+};
 
 // 1冊の本を削除する
 const remove_book = id => {
@@ -127,7 +127,7 @@ const remove_book = id => {
       id: id
     }
   });
-}
+};
 // 該当の本を削除し、その結果を表示する
 exports.destroy = (req, res) => {
   remove_book(req.params.id)
@@ -142,4 +142,4 @@ exports.destroy = (req, res) => {
         }
       });
     });
-}
+};

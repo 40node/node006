@@ -54,7 +54,7 @@ passport.use(new LocalStrategy(
       if (hashPassword(password, user.salt) !== user.password)
         return done(null, false, { message: 'Incorrect password.' });
       return done(null, user.get());
-    })
+    });
   }
 ));
 
