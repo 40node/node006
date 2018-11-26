@@ -76,16 +76,9 @@ passport.deserializeUser((id, done) => {
 app.use((req, res, next) => {
   if (req.isAuthenticated())
     return next();
-  switch (req.url) {
-    case '/':
-    case '/users/':
-    case '/users/create':
-    case '/login':
-      next();
-      break;
-    default:
-      res.redirect('/');
-  }
+  if (req.url === '/' || req.url === '/login')
+    return next();
+  res.redirect('/');
 });
 
 app.use('/', index);

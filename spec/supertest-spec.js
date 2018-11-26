@@ -15,20 +15,19 @@ const wrongEmailCredentials = {
 };
 const wrongPasswordCredentials = {
   email: 'tak@oshiire.to',
-  password: ''
+  password: 'foo'
 };
 
 //now let's login the user before we run any tests
 var authenticatedUser = request(app);
 
-beforeAll((done) => {
-  authenticatedUser
-    .post('/login')
-    .send(userCredentials)
-    .expect(302, done);
-});
-
 describe('POST /login', () => {
+  it('should redirect to / with unloggined user', (done) => {
+    request(app)
+      .get('/books/')
+      .expect(302)
+      .expect('Location', '/', done);
+  });
   it('should success login with correct user', (done) => {
     request(app)
       .post('/login')
@@ -52,66 +51,92 @@ describe('POST /login', () => {
   });
 });
 
-describe('GET /', () => {
-  it('respond with http', (done) => {
+describe('with Login', () => {
+  beforeAll((done) => {
     authenticatedUser
-      .get('/')
-      .set('Accept', 'text/html')
-      .expect(200, done);
-  });
-});
-
-describe('GET /books/', () => {
-  it('respond with http', (done) => {
-    authenticatedUser
-      .get('/books/')
-      .set('Accept', 'text/html')
-      .expect(200, done);
-  });
-});
-
-describe('GET /books/:id', () => {
-  it('respond with http', (done) => {
-    authenticatedUser
-      .get('/books/1')
-      .set('Accept', 'text/html')
-      .expect(200, done);
-  });
-});
-
-describe('POST /books/create', () => {
-  it('respond with http', (done) => {
-    authenticatedUser
-      .post('/books/create')
-      .send({ book_title: 'test', user_id: 1 })
-      .set('Accept', 'text/html')
+      .post('/login')
+      .send(userCredentials)
       .expect(302, done);
   });
-});
 
-describe('POST /books/update/:id', () => {
-  it('respond with http', (done) => {
-    authenticatedUser
-      .post('/books/update/1')
-      .set('Accept', 'text/html')
-      .expect(200, done);
+  describe('GET /', () => {
+    it('respond with http', (done) => {
+      authenticatedUser
+        .get('/')
+        .set('Accept', 'text/html')
+        .expect(200, done);
+    });
+  });
+
+  describe('GET /books/', () => {
+    it('respond with http', (done) => {
+      authenticatedUser
+        .get('/books/')
+        .set('Accept', 'text/html')
+        .expect(200, done);
+    });
+  });
+
+  describe('GET /books/:id', () => {
+    it('respond with http', (done) => {
+      authenticatedUser
+        .get('/books/1')
+        .set('Accept', 'text/html')
+        .expect(200, done);
+    });
+  });
+
+  describe('POST /books/create', () => {
+    it('respond with http', (done) => {
+      authenticatedUser
+        .post('/books/create')
+        .send({ book_title: 'test', user_id: 1 })
+        .set('Accept', 'text/html')
+        .expect(302, done);
+    });
+  });
+
+  describe('POST /books/update/:id', () => {
+    it('respond with http', (done) => {
+      authenticatedUser
+        .post('/books/update/1')
+        .set('Accept', 'text/html')
+        .expect(200, done);
+    });
+  });
+
+  describe('GET /books/destroy/:id', () => {
+    it('respond with http', (done) => {
+      authenticatedUser
+        .get('/books/destroy/1')
+        .set('Accept', 'text/html')
+        .expect(200, done);
+    });
+  });
+
+  describe('POST /books/update', () => {
+    it('no http page', (done) => {
+      authenticatedUser
+        .post('/books/destroy/1')
+        .set('Accept', 'text/html')
+        .expect(404, done);
+    });
   });
 });
 
-describe('GET /books/destroy/:id', () => {
-  it('respond with http', (done) => {
+describe('GET /logout', () => {
+  beforeAll((done) => {
     authenticatedUser
-      .get('/books/destroy/1')
-      .set('Accept', 'text/html')
-      .expect(200, done);
+      .post('/login')
+      .send(userCredentials)
+      .expect(302, done);
   });
-});
 
-describe('POST /books/update', () => {
-  it('no http page', (done) => {
+  it('should go back to login', (done) => {
     authenticatedUser
-      .post('/books/destroy/1')
+      .get('/logout')
       .set('Accept', 'text/html')
-      .expect(404, done);
+      .expect(302)
+      .expect('Location', '/', done);
   });
 });
