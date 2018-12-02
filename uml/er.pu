@@ -5,6 +5,7 @@ package 蔵書データベース <<Database>> {
     --
     email
     password
+    salt
     admin
     ..
     created_at

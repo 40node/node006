@@ -19,7 +19,7 @@ const wrongPasswordCredentials = {
 };
 
 //now let's login the user before we run any tests
-var authenticatedUser = request(app);
+const authenticatedUser = request(app);
 
 describe('POST /login', () => {
   it('should redirect to / with unloggined user', (done) => {
