@@ -20,8 +20,8 @@
 
 ### ローカルで実行する場合
 
-1. git clone https://github.com/40node/node004.git
-2. cd node004
+1. git clone https://github.com/40node/node005.git
+2. cd node005
 3. npm install
 4. npm run build
 5. npm start
@@ -29,8 +29,8 @@
 
 ### Heroku へデプロイする場合
 
-1. git clone https://github.com/40node/node004.git
-2. cd node004
+1. git clone https://github.com/40node/node005.git
+2. cd node005
 3. heroku create
 4. git push heroku master
 5. heroku open
