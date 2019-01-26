@@ -1,16 +1,16 @@
 # library_management
-シェルスクリプトマガジン Vol.58 サンプルプログラム
+シェルスクリプトマガジン Vol.59 サンプルプログラム
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/30c351e173f44f8090422118462efe6a)](https://app.codacy.com/app/app107724887/node006?utm_source=github.com&utm_medium=referral&utm_content=40node/node006&utm_campaign=Badge_Grade_Dashboard)
-[![CircleCI](https://circleci.com/gh/40node/library_management.svg?style=svg)](https://circleci.com/gh/40node/library_management)
-[![Build Status](https://travis-ci.org/40node/library_management.svg?branch=master)](https://travis-ci.org/40node/library_management)
+[![CircleCI](https://circleci.com/gh/40node/library_management.svg?style=svg)](https://circleci.com/gh/40node/node006)
+[![Build Status](https://travis-ci.org/40node/library_management.svg?branch=master)](https://travis-ci.org/40node/node006)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/40node/node006.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/40node/node006/alerts/)
 
 ## 前提条件
 
 当サンプルプログラムは、次の環境での実行を確認しています。
 
- - node.js 10.13.0 / 11.2.0
+ - node.js 10.16.0 / 11.6.0
  - sqlite3 v4.0.4 (ローカルで実行する場合に必要です)
  - postgresql v10.4 (本番環境としてローカルかHerokuで実行する場合に必要です)
  - macOS High Sierra 10.13.6
