@@ -17,7 +17,7 @@ const hashPassword = (password, salt) => {
   return hashed;
 };
 
-var index = require('./routes/index');
+var auth = require('./routes/auth');
 var books = require('./routes/books');
 var users = require('./routes/users');
 
@@ -72,18 +72,9 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-// for authenticating
-app.use((req, res, next) => {
-  if (req.isAuthenticated())
-    return next();
-  if (req.url === '/' || req.url === '/login')
-    return next();
-  res.redirect('/');
-});
-
-app.use('/', index);
-app.use('/books', books);
-app.use('/users', users);
+app.use('/api/auth', auth);
+app.use('/api/books', books);
+app.use('/api/users', users);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

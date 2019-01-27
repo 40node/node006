@@ -5,8 +5,7 @@ const rewire = require('rewire');
 const book = rewire('../controllers/bookProvider');
 
 describe('#bookProvider', () => {
-  let req, res;
-
+  let req, res = () => { return this; };
   // 毎回、利用する変数の初期化
   beforeEach(() => {
     req = {
@@ -26,10 +25,13 @@ describe('#bookProvider', () => {
         id: 1
       }
     };
-    // res.* は、モックとして利用する関数を仮定義しておく
-    res = {
-      redirect: function () { },
-      render: function () { }
+    // 
+    res.prototype = {
+      redirect: function () { return this; },
+      render: function () { return this; },
+      type: function () { return this; },
+      status: function () { return this; },
+      json: function () { return this; }
     };
   });
 
@@ -38,7 +40,7 @@ describe('#bookProvider', () => {
     const get_book = book.__get__('get_book'); // rewire
 
     it('should get content with id eq 1', (done) => {
-      get_book(1, 1)
+      get_book(1)(1)
         .then(result => {
           expect(result.id).toBe(1);
           // id = 1 の書籍は 3件のコメントがあるはず
@@ -47,7 +49,7 @@ describe('#bookProvider', () => {
         }).catch(done.fail);
     });
     it('should get null', (done) => {
-      get_book(null)
+      get_book(null)(null)
         .then(result => {
           // 対象がない場合、NULL が返ってくることを期待する
           expect(result).toBeNull();
@@ -57,13 +59,13 @@ describe('#bookProvider', () => {
   });
   describe('#find', () => {
     it('should see content with id eq 1', (done) => {
-      // res.render 用のモックを準備し、期待する返り値を設定する
-      res.render = (view, stacks) => {
-        expect(view).toBe('description');
-        expect(stacks.book.author).toBe('しょっさん');
+      res.status = (status) => {
+        console.log(status);
+      };
+      res.json = (results) => {
+        expect(results.user_id).toEqual(1);
         done();
       };
-      // モック設定後に、対象の関数をコールする
       book.find(req, res);
     });
     it('should view an error page', (done) => {

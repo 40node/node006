@@ -52,47 +52,59 @@ describe('POST /login', () => {
 });
 
 describe('with Login', () => {
+  let jwt_token;
+
   beforeAll((done) => {
-    authenticatedUser
+    request(app)
       .post('/login')
       .send(userCredentials)
-      .expect(302, done);
+      .end((err, res) => {
+        jwt_token = res.body.token;
+        done();
+      });
   });
 
-  describe('GET /', () => {
+  describe('GET /api/books/', () => {
     it('respond with http', (done) => {
-      authenticatedUser
-        .get('/')
-        .set('Accept', 'text/html')
+      request(app)
+        .get('/api/books/')
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${jwt_token}`)
+        .expect('Content-Type', /json/)
         .expect(200, done);
     });
   });
 
-  describe('GET /books/', () => {
-    it('respond with http', (done) => {
-      authenticatedUser
-        .get('/books/')
-        .set('Accept', 'text/html')
-        .expect(200, done);
+  describe('GET /api/books/:id', () => {
+    it('respond with REST', (done) => {
+      request(app)
+        .get('/api/books/1')
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${jwt_token}`)
+        .expect('Content-Type', /json/)
+        .expect(200, {
+          id: 1,
+          book_title: 'シェルスクリプトマガジン vol.54',
+          author: 'しょっさん',
+          publisher: 'USP研究所',
+          user_id: 1,
+          image_uml: 'https://uec.usp-lab.com/INFO/IMG/SHELLSCRIPTMAG_VOL54.JPG'
+        }, done);
     });
   });
 
-  describe('GET /books/:id', () => {
-    it('respond with http', (done) => {
-      authenticatedUser
-        .get('/books/1')
-        .set('Accept', 'text/html')
-        .expect(200, done);
-    });
-  });
-
-  describe('POST /books/create', () => {
-    it('respond with http', (done) => {
-      authenticatedUser
-        .post('/books/create')
+  describe('POST /api/books/create', () => {
+    it('respond with REST', (done) => {
+      request(app)
+        .post('/api/books/create')
         .send({ book_title: 'test', user_id: 1 })
-        .set('Accept', 'text/html')
-        .expect(302, done);
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${jwt_token}`)
+        .expect('Content-Type', /json/)
+        .expect(200, {
+          book_title: 'test',
+          user_id: 1
+        }, done);
     });
   });
 

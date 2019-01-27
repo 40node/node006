@@ -4,33 +4,36 @@ const libraries = models.Library;
 const comments = models.Comment;
 
 // 1冊の本の情報を取得する
-const get_book = (user_id, book_id) => {
-  return libraries.findOne({
-    where: {
-      user_id: user_id,
-      id: book_id
-    },
-    include: [{
-      model: comments,
-      required: false
-    }]
+const get_book = ((user_id) => {
+  return ((book_id) => {
+    return libraries.findOne({
+      where: {
+        user_id: user_id,
+        id: book_id
+      },
+      include: [{
+        model: comments,
+        required: false
+      }]
+    });
   });
-};
+});
 // 1冊の本の詳細を表示する
 exports.find = (req, res) => {
-  get_book(req.user.id, req.params.id)
+  req.user = {
+    id: 1
+  };
+  get_book(req.user.id)(req.params.id)
     .then(result => {
-      res.render('description', {
-        title: result.book_title,
-        book: result
-      });
-    }).catch(() => {
-      res.render('error', {
-        message: 'エラーが発生しました.',
-        error: {
-          status: '本がありませんでした.',
-        }
-      });
+      res
+        .type('application/json')
+        .status(200)
+        .json(result.get());
+    }).catch(err => {
+      res
+        .type('application/json')
+        .status(200)
+        .json(err);
     });
 };
 
@@ -54,10 +57,16 @@ const get_contents = user_id => {
 // 登録されている本の一覧を表示する
 exports.view = (req, res) => {
   get_contents(req.user.id)
-    .then(results => {
-      res.render('view', {
-        books: results
-      });
+    .then(result => {
+      res
+        .type('application/json')
+        .status(200)
+        .json(result.get());
+    }).catch((err) => {
+      res
+        .type('application/json')
+        .status(200)
+        .json(err);
     });
 };
 
