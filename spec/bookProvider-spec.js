@@ -25,13 +25,14 @@ describe('#bookProvider', () => {
         id: 1
       }
     };
-    // 
-    res.prototype = {
-      redirect: function () { return this; },
-      render: function () { return this; },
-      type: function () { return this; },
-      status: function () { return this; },
-      json: function () { return this; }
+    //
+    res = {
+      redirect() { return this; },
+      render() { return this; },
+      location() { return this; },
+      type() { return this; },
+      status() { return this; },
+      json() { return this; }
     };
   });
 
@@ -59,23 +60,19 @@ describe('#bookProvider', () => {
   });
   describe('#find', () => {
     it('should see content with id eq 1', (done) => {
-      res.status = (status) => {
-        console.log(status);
-      };
-      res.json = (results) => {
-        expect(results.user_id).toEqual(1);
+      res.json = (result => {
+        expect(result.user_id).toEqual(1);
         done();
-      };
+      });
       book.find(req, res);
     });
     it('should view an error page', (done) => {
       // 対象の本がない場合には、エラー画面が返ってくることを期待する
       req.params.id = null;
-      res.render = (view, stacks) => {
-        expect(view).toBe('error');
-        expect(stacks.message).toBe('エラーが発生しました.');
+      res.json = (result => {
+        expect(result).toEqual({});
         done();
-      };
+      });
       book.find(req, res);
     });
   });
@@ -99,12 +96,12 @@ describe('#bookProvider', () => {
   describe('#view', () => {
     it('should list two or more books', (done) => {
       // 同様にモックを準備する
-      res.render = (view, stacks) => {
-        expect(view).toBe('view');
-        expect(stacks.books[0].id).toBe(1);
-        expect(stacks.books[1].author).toBe('しょっさん');
+      res.json = (result => {
+        expect(result[0].id).toBe(1);
+        expect(result[1].author).toBe('しょっさん');
         done();
-      };
+        return this;
+      });
       // モック設定後に関数をコール
       book.view(req, res);
     });
@@ -151,19 +148,21 @@ describe('#bookProvider', () => {
   });
   describe('#create', () => {
     it('should redirect description of the book', (done) => {
-      res.redirect = (uri) => {
-        expect(uri).toMatch(/^\/books\/[0-9]+$/);
+      res.location = (result => {
+        expect(result).toMatch(/^\/books\/[0-9]+$/);
         done();
-      };
+        return this;
+      });
       book.create(req, res);
     });
     it('should view an error page', (done) => {
       req.body.book_title = '';
-      res.render = (view, stacks) => {
-        expect(view).toBe('error');
-        expect(stacks.message).toBe('エラーが発生しました.');
+      res.json = (result => {
+        expect(result.message).toBe('エラーが発生しました.');
+        expect(result.error.status).toBe('本を登録できませんでした.');
         done();
-      };
+        return this;
+      });
       book.create(req, res);
     });
   });
@@ -180,9 +179,10 @@ describe('#bookProvider', () => {
       }).catch(done.fail);
     });
     it('should redirect to description of the book', (done) => {
-      res.redirect = (uri) => {
-        expect(uri).toMatch(/^\/books\/[0-9]+$/);
+      res.location = (result) => {
+        expect(result).toMatch(/^\/books\/1/);
         done();
+        return this;
       };
       book.update(req, res);
     });
@@ -217,19 +217,20 @@ describe('#bookProvider', () => {
       req.body.user_id = 1;
       register_book(req.body).then(result => {
         req.params.id = result.id;
-        res.redirect = (uri) => {
-          expect(uri).toBe('/books/');
+        res.status = (status) => {
+          expect(status).toBe(204);
           done();
         };
         book.destroy(req, res);
       });
     });
     it('should view an error page', (done) => {
-      res.render = (view, stacks) => {
-        expect(view).toBe('error');
-        expect(stacks.message).toBe('エラーが発生しました.');
+      res.json = (result => {
+        expect(result.message).toBe('エラーが発生しました.');
+        expect(result.error.status).toBe('本を削除できませんでした.');
         done();
-      };
+        return this;
+      });
       book.destroy(req, res);
     });
   });

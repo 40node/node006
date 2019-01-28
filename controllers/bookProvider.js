@@ -20,20 +20,17 @@ const get_book = ((user_id) => {
 });
 // 1冊の本の詳細を表示する
 exports.find = (req, res) => {
-  req.user = {
-    id: 1
-  };
   get_book(req.user.id)(req.params.id)
     .then(result => {
       res
         .type('application/json')
         .status(200)
         .json(result.get());
-    }).catch(err => {
+    }).catch(() => {
       res
         .type('application/json')
         .status(200)
-        .json(err);
+        .json({});
     });
 };
 
@@ -61,8 +58,8 @@ exports.view = (req, res) => {
       res
         .type('application/json')
         .status(200)
-        .json(result.get());
-    }).catch((err) => {
+        .json(result);
+    }).catch(err => {
       res
         .type('application/json')
         .status(200)
@@ -89,15 +86,22 @@ exports.create = (req, res) => {
   req.body.user_id = req.user.id;
   register_book(req.body)
     .then(result => {
-      res.redirect(`/books/${result.id}`);
+      res
+        .location(`/books/${result.id}`)
+        .type('application/json')
+        .status(201)
+        .json(result.get());
     }).catch(errors => {
-      res.render('error', {
-        message: 'エラーが発生しました.',
-        error: {
-          status: '本を登録できませんでした.',
-          stack: errors
-        }
-      });
+      res
+        .type('application/json')
+        .status(200)
+        .json({
+          message: 'エラーが発生しました.',
+          error: {
+            status: '本を登録できませんでした.',
+            stack: errors
+          }
+        });
     });
 };
 
@@ -116,16 +120,24 @@ const update_book = (id, book) => {
 // 本の情報を更新し、その結果を表示する
 exports.update = (req, res) => {
   update_book(req.params.id, req.body)
-    .then(() => {
-      res.redirect(`/books/${req.params.id}`);
+    .then(result => get_book(req.user.id)(result))
+    .then(content => {
+      res
+        .location(`/books/${req.params.id}`)
+        .type('application/json')
+        .status(201)
+        .json(content);
     }).catch(errors => {
-      res.render('error', {
-        message: 'エラーが発生しました.',
-        error: {
-          status: '本を登録できませんでした.',
-          stack: errors
-        }
-      });
+      res
+        .type('application/json')
+        .status(200)
+        .json({
+          message: 'エラーが発生しました.',
+          error: {
+            status: '本を更新できませんでした.',
+            stack: errors
+          }
+        });
     });
 };
 
@@ -141,14 +153,17 @@ const remove_book = id => {
 exports.destroy = (req, res) => {
   remove_book(req.params.id)
     .then(() => {
-      res.redirect('/books/');
+      res.status(204);
     }).catch(errors => {
-      res.render('error', {
-        message: 'エラーが発生しました.',
-        error: {
-          status: '本を削除できませんでした.',
-          stack: errors
-        }
-      });
+      res
+        .type('application/json')
+        .status(200)
+        .json({
+          message: 'エラーが発生しました.',
+          error: {
+            status: '本を削除できませんでした.',
+            stack: errors
+          }
+        });
     });
 };
