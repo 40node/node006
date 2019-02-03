@@ -142,28 +142,38 @@ exports.update = (req, res) => {
 };
 
 // 1冊の本を削除する
-const remove_book = id => {
-  return libraries.destroy({
-    where: {
-      id: id
-    }
-  });
+const remove_book = (user_id) => {
+  return (id) => {
+    return libraries.destroy({
+      where: {
+        id: id,
+        user_id: user_id
+      }
+    });
+  };
 };
 // 該当の本を削除し、その結果を表示する
 exports.destroy = (req, res) => {
-  remove_book(req.params.id)
-    .then(() => {
-      res.status(204);
+  remove_book(req.user.id)(req.params.id)
+    .then(num_destroy => {
+      if (num_destroy >= 1) {
+        res
+          .type('application/json')
+          .status(204)
+          .end();
+      } else {
+        res
+          .type('application/json')
+          .status(404)
+          .end();
+      }
     }).catch(errors => {
       res
         .type('application/json')
         .status(200)
         .json({
-          message: 'エラーが発生しました.',
-          error: {
-            status: '本を削除できませんでした.',
-            stack: errors
-          }
+          success: false,
+          message: '本を削除できませんでした.' + errors,
         });
     });
 };

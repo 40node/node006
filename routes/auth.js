@@ -1,19 +1,37 @@
 var express = require('express');
-var passport = require('passport');
 var router = express.Router();
+const jwt = require('jsonwebtoken');
+var models = require('../models'),
+  User = models.user;
 
-/* GET home page. */
-router.get('/', (req, res) => {
-  //  res.render('index', { title: 'Express' });
-  res.render('login');
+// パスワードハッシュ化
+const hashPassword = (password, salt) => {
+  if (password) {
+    var bcrypt = require('bcrypt');
+    return bcrypt.hashSync(password, salt);
+  } else { return null; }
+};
+
+router.post('/', (req, res, next) => {
+  const username = req.body.email;
+  const password = req.body.password;
+  User.findOne({ where: { email: username } })
+    .then(user => {
+      if (!user) {
+        res
+          .status(401)
+          .json({ success: false, message: 'Incorrect email.' });
+      } else if (hashPassword(password, user.salt) !== user.password) {
+        res
+          .status(401)
+          .json({ success: false, message: 'Incorrect password.' });
+      } else {
+        res
+          .status(200)
+          .json({ success: true, token: jwt.sign(user.get(), 'testkey'), message: 'success' });
+      }
+    });
 });
-
-router.post('/login',
-  passport.authenticate('local', {
-    successRedirect: '/books/',
-    failureRedirect: '/'
-  })
-);
 
 router.get('/logout', (req, res) => {
   if (req.isAuthenticated())

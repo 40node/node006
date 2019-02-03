@@ -20,12 +20,12 @@ router.post('/create', (req, res) => {
 });
 
 // http://books/update/100 などで POST したとき → 該当のID(この場合は100)の内容を更新する
-router.post('/update/:id', (req, res) => {
+router.patch('/update/:id', (req, res) => {
   bookProvider.update(req, res);
 });
 
 // http://books/destroy/100 などでアクセスしたとき → 該当のID(この場合は100)の本を削除する
-router.get('/destroy/:id', (req, res) => {
+router.delete('/destroy/:id', (req, res) => {
   bookProvider.destroy(req, res);
 });
 

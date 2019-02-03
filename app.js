@@ -1,21 +1,17 @@
 var express = require('express');
 var path = require('path');
-// var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-// var csurf = require('csurf');
+// var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var session = require('express-session');
-var models = require('./models');
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+// var session = require('express-session');
+var models = require('./models'),
+  User = models.user;
 
-// パスワードハッシュ化
-const hashPassword = (password, salt) => {
-  var bcrypt = require('bcrypt');
-  var hashed = bcrypt.hashSync(password, salt);
-  return hashed;
-};
+const passport = require('passport');
+const passportJWT = require('passport-jwt');
+const ExtractJWT = passportJWT.ExtractJwt;
+// const localStrategy = require('passport-local').Strategy;
+const JWTStrategy = passportJWT.Strategy;
 
 var auth = require('./routes/auth');
 var books = require('./routes/books');
@@ -28,53 +24,40 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-// app.use(csurf({ cookie: true }));
+// app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // add initialize session and passport
-app.use(session({ secret: '40node' }));
+// app.use(session({ secret: '40node' }));
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 // using authentication strategy
-passport.use(new LocalStrategy(
+passport.use(new JWTStrategy(
   {
-    usernameField: 'email',
-    passwordField: 'password'
-  },
-  (username, password, done) => {
-    models.user.findOne({ where: { email: username } }).then(user => {
-      if (!user)
-        return done(null, false, { message: 'Incorrect email.' });
-      if (hashPassword(password, user.salt) !== user.password)
-        return done(null, false, { message: 'Incorrect password.' });
-      return done(null, user.get());
-    });
+    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    secretOrKey: 'testkey'
+  }, (jwt_payload, done) => {
+    User.findOne({ where: { id: jwt_payload.id } })
+      .then(user => {
+        if (user) {
+          done(null, user);
+        } else {
+          done(null, false);
+        }
+      })
+      .catch(err => {
+        return done(err);
+      });
   }
 ));
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-  models.user.findById(id).then(user => {
-    if (user) {
-      done(null, user.get());
-    } else {
-      done(user.errors, null);
-    }
-  });
-});
-
 app.use('/api/auth', auth);
-app.use('/api/books', books);
-app.use('/api/users', users);
+app.use('/api/books', passport.authenticate('jwt', { session: false }), books);
+app.use('/api/users', passport.authenticate('jwt', { session: false }), users);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -91,7 +74,10 @@ app.use((err, req, res, next) => {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json({
+    success: false,
+    message: err
+  });
 });
 
 module.exports = app;

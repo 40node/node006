@@ -25,8 +25,10 @@
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "jasmine": "^3.3.0",
+    "jsonwebtoken": "^8.4.0",
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pg": "^7.7.1",
     "rewire": "^4.0.1",
@@ -37,8 +39,8 @@
     "supertest-session": "^3.3.0"
   },
   "devDependencies": {
-    "codacy-coverage": "^3.3.0",
+    "codacy-coverage": "^3.4.0",
     "istanbul": "^0.4.5",
-    "sqlite3": "^4.0.4"
+    "sqlite3": "^4.0.6"
   }
 }
