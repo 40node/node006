@@ -23,12 +23,10 @@ exports.find = (req, res) => {
   get_book(req.user.id)(req.params.id)
     .then(result => {
       res
-        .type('application/json')
         .status(200)
         .json(result.get());
     }).catch(() => {
       res
-        .type('application/json')
         .status(200)
         .json({});
     });
@@ -56,14 +54,14 @@ exports.view = (req, res) => {
   get_contents(req.user.id)
     .then(result => {
       res
-        .type('application/json')
         .status(200)
         .json(result);
     }).catch(err => {
       res
-        .type('application/json')
         .status(200)
-        .json(err);
+        .json({
+          errors: { message: err }
+        });
     });
 };
 
@@ -71,7 +69,7 @@ exports.view = (req, res) => {
 const validate = params => {
   let errors = params.errors = [];
   if (!params.book_title) {
-    errors.push('本のタイトルが入っていません');
+    errors.push({ 'message': '本のタイトルが入っていません' });
   }
   // 画像URLがなければデフォルトを登録する
   params.image_url = params.image_url || 'http://example.com/';
@@ -88,24 +86,17 @@ exports.create = (req, res) => {
     .then(result => {
       res
         .location(`/books/${result.id}`)
-        .type('application/json')
         .status(201)
         .json(result.get());
     }).catch(errors => {
       res
-        .type('application/json')
-        .status(200)
-        .json({
-          message: 'エラーが発生しました.',
-          error: {
-            status: '本を登録できませんでした.',
-            stack: errors
-          }
-        });
+        .status(400)
+        .json({ errors: errors });
     });
 };
 
 // 対象の本の情報を更新する
+// todo: update only specific user
 const update_book = (id, book) => {
   if (validate(book)) {
     return libraries.update(book, {
@@ -131,6 +122,7 @@ exports.update = (req, res) => {
       res
         .type('application/json')
         .status(200)
+        // todo: update to correct message format.
         .json({
           message: 'エラーが発生しました.',
           error: {
@@ -158,22 +150,16 @@ exports.destroy = (req, res) => {
     .then(num_destroy => {
       if (num_destroy >= 1) {
         res
-          .type('application/json')
           .status(204)
           .end();
       } else {
         res
-          .type('application/json')
           .status(404)
           .end();
       }
     }).catch(errors => {
       res
-        .type('application/json')
-        .status(200)
-        .json({
-          success: false,
-          message: '本を削除できませんでした.' + errors,
-        });
+        .status(409)
+        .json({ errors: { message: errors.name } });
     });
 };
