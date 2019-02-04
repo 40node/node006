@@ -3,12 +3,16 @@ const models = require('../models');
 const libraries = models.Library;
 const comments = models.Comment;
 
-// 1冊の本の情報を取得する
-const get_book = ((user_id) => {
-  return ((book_id) => {
+module.exports = class bookProvider {
+  constructor(user_id) {
+    this._user_id = user_id;
+  }
+
+  // 1冊の本の情報を取得する
+  _get_book(book_id) {
     return libraries.findOne({
       where: {
-        user_id: user_id,
+        user_id: this._user_id,
         id: book_id
       },
       include: [{
@@ -16,150 +20,145 @@ const get_book = ((user_id) => {
         required: false
       }]
     });
-  });
-});
-// 1冊の本の詳細を表示する
-exports.find = (req, res) => {
-  get_book(req.user.id)(req.params.id)
-    .then(result => {
-      res
-        .status(200)
-        .json(result.get());
-    }).catch(() => {
-      res
-        .status(200)
-        .json({});
-    });
-};
-
-// 登録されている本の一覧と、コメント数を取得する
-const get_contents = user_id => {
-  return libraries.findAll({
-    attributes: ['id', 'book_title', 'author', 'publisher', [models.sequelize.fn('COUNT', models.sequelize.col('Comments.book_id')), 'cnt']],
-    group: ['Library.id'],
-    raw: true,
-    subQuery: false,
-    limit: 10,
-    where: {
-      user_id: user_id
-    },
-    include: {
-      model: models.Comment,
-      attributes: []
-    },
-  });
-};
-// 登録されている本の一覧を表示する
-exports.view = (req, res) => {
-  get_contents(req.user.id)
-    .then(result => {
-      res
-        .status(200)
-        .json(result);
-    }).catch(err => {
-      res
-        .status(200)
-        .json({
-          errors: { message: err }
-        });
-    });
-};
-
-// パラメータが正しいかどうか検査する
-const validate = params => {
-  let errors = params.errors = [];
-  if (!params.book_title) {
-    errors.push({ 'message': '本のタイトルが入っていません' });
   }
-  // 画像URLがなければデフォルトを登録する
-  params.image_url = params.image_url || 'http://example.com/';
-  return errors.length === 0;
-};
-// 本を一冊登録する
-const register_book = book => {
-  return validate(book) ? libraries.create(book) : Promise.reject(book.errors);
-};
-// 本を登録し、その結果を表示する
-exports.create = (req, res) => {
-  req.body.user_id = req.user.id;
-  register_book(req.body)
-    .then(result => {
-      res
-        .location(`/books/${result.id}`)
-        .status(201)
-        .json(result.get());
-    }).catch(errors => {
-      res
-        .status(400)
-        .json({ errors: errors });
-    });
-};
 
-// 対象の本の情報を更新する
-// todo: update only specific user
-const update_book = (id, book) => {
-  if (validate(book)) {
-    return libraries.update(book, {
+  // 1冊の本の詳細を表示する
+  find(req, res) {
+    this._get_book(req.params.id)
+      .then(result => {
+        res
+          .status(200)
+          .json(result.get());
+      }).catch(() => {
+        res
+          .status(200)
+          .json({});
+      });
+  }
+
+  // 登録されている本の一覧と、コメント数を取得する
+  _get_contents() {
+    return libraries.findAll({
+      attributes: ['id', 'book_title', 'author', 'publisher', [models.sequelize.fn('COUNT', models.sequelize.col('Comments.book_id')), 'cnt']],
+      group: ['Library.id'],
+      raw: true,
+      subQuery: false,
+      limit: 10,
       where: {
-        id: id
-      }
+        user_id: this._user_id
+      },
+      include: {
+        model: models.Comment,
+        attributes: []
+      },
     });
-  } else {
-    return Promise.reject(book.errors);
   }
-};
-// 本の情報を更新し、その結果を表示する
-exports.update = (req, res) => {
-  update_book(req.params.id, req.body)
-    .then(result => get_book(req.user.id)(result))
-    .then(content => {
-      res
-        .location(`/books/${req.params.id}`)
-        .type('application/json')
-        .status(201)
-        .json(content);
-    }).catch(errors => {
-      res
-        .type('application/json')
-        .status(200)
-        // todo: update to correct message format.
-        .json({
-          message: 'エラーが発生しました.',
-          error: {
-            status: '本を更新できませんでした.',
-            stack: errors
-          }
-        });
-    });
-};
+  // 登録されている本の一覧を表示する
+  view(req, res) {
+    this._get_contents()
+      .then(result => {
+        res
+          .status(200)
+          .json(result);
+      }).catch(err => {
+        res
+          .status(200)
+          .json({
+            errors: { message: err }
+          });
+      });
+  }
 
-// 1冊の本を削除する
-const remove_book = (user_id) => {
-  return (id) => {
+  // パラメータが正しいかどうか検査する
+  _validate(params) {
+    let errors = params.errors = [];
+    if (!params.book_title) {
+      errors.push({ 'message': '本のタイトルが入っていません' });
+    }
+    // 画像URLがなければデフォルトを登録する
+    params.image_url = params.image_url || 'http://example.com/';
+    return errors.length === 0;
+  }
+  // 本を一冊登録する
+  _register_book(book) {
+    return this._validate(book) ? libraries.create(book) : Promise.reject(book.errors);
+  }
+  // 本を登録し、その結果を表示する
+  create(req, res) {
+    req.body.user_id = this._user_id;
+    this._register_book(req.body)
+      .then(result => {
+        res
+          .location(`/books/${result.id}`)
+          .status(201)
+          .json(result.get());
+      }).catch(errors => {
+        res
+          .status(400)
+          .json({ errors: errors });
+      });
+  }
+
+  // 対象の本の情報を更新する
+  // todo: update only specific user
+  _update_book(book) {
+    if (this._validate(book)) {
+      return libraries.update(book, {
+        where: {
+          id: this._user_id
+        }
+      });
+    } else {
+      return Promise.reject(book.errors);
+    }
+  }
+  // 本の情報を更新し、その結果を表示する
+  update(req, res) {
+    this._update_book(req.body)
+      .then(result => this._get_book(result))
+      .then(content => {
+        res
+          .location(`/books/${req.params.id}`)
+          .status(201)
+          .json(content);
+      }).catch(errors => {
+        res
+          .status(200)
+          // todo: update to correct message format.
+          .json({
+            errors: {
+              message: errors
+            }
+          });
+      });
+  }
+
+  // 1冊の本を削除する
+  _remove_book(id) {
     return libraries.destroy({
       where: {
         id: id,
-        user_id: user_id
+        user_id: this._user_id
       }
     });
-  };
-};
-// 該当の本を削除し、その結果を表示する
-exports.destroy = (req, res) => {
-  remove_book(req.user.id)(req.params.id)
-    .then(num_destroy => {
-      if (num_destroy >= 1) {
+  }
+  // 該当の本を削除し、その結果を表示する
+  destroy(req, res) {
+    this._remove_book(req.params.id)
+      .then(num_destroy => {
+        if (num_destroy >= 1) {
+          res
+            .status(204)
+            .end();
+        } else {
+          res
+            .status(404)
+            .end();
+        }
+      }).catch(errors => {
         res
-          .status(204)
-          .end();
-      } else {
-        res
-          .status(404)
-          .end();
-      }
-    }).catch(errors => {
-      res
-        .status(409)
-        .json({ errors: { message: errors.name } });
-    });
+          .status(409)
+          .json({ errors: { message: errors.name } });
+      });
+  }
 };

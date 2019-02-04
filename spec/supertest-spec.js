@@ -19,35 +19,34 @@ const wrongPasswordCredentials = {
 };
 
 //now let's login the user before we run any tests
-const authenticatedUser = request(app);
-
-describe('POST /login', () => {
-  it('should redirect to / with unloggined user', (done) => {
+describe('POST /api/auth/', () => {
+  it('should be 404 not found', (done) => {
     request(app)
-      .get('/books/')
-      .expect(302)
-      .expect('Location', '/', done);
+      .get('/api/')
+      .expect(404, done);
+  });
+  it('should unauthorized access with unloggined user', (done) => {
+    request(app)
+      .get('/api/books/')
+      .expect(401, done);
   });
   it('should success login with correct user', (done) => {
     request(app)
-      .post('/login')
+      .post('/api/auth/')
       .send(userCredentials)
-      .expect(302)
-      .expect('Location', '/books/', done);
+      .expect(200, done);
   });
   it('should deny login with wrong email', (done) => {
     request(app)
-      .post('/login')
+      .post('/api/auth/')
       .send(wrongEmailCredentials)
-      .expect(302)
-      .expect('Location', '/', done);
+      .expect(401, done);
   });
   it('should deny login with wrong password', (done) => {
     request(app)
-      .post('/login')
+      .post('/api/auth/')
       .send(wrongPasswordCredentials)
-      .expect(302)
-      .expect('Location', '/', done);
+      .expect(401, done);
   });
 });
 
@@ -56,7 +55,7 @@ describe('with Login', () => {
 
   beforeAll((done) => {
     request(app)
-      .post('/login')
+      .post('/api/auth/')
       .send(userCredentials)
       .end((err, res) => {
         jwt_token = res.body.token;
@@ -70,7 +69,6 @@ describe('with Login', () => {
         .get('/api/books/')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
-        .expect('Content-Type', /json/)
         .expect(200, done);
     });
   });
@@ -81,15 +79,7 @@ describe('with Login', () => {
         .get('/api/books/1')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
-        .expect('Content-Type', /json/)
-        .expect(200, {
-          id: 1,
-          book_title: 'シェルスクリプトマガジン vol.54',
-          author: 'しょっさん',
-          publisher: 'USP研究所',
-          user_id: 1,
-          image_uml: 'https://uec.usp-lab.com/INFO/IMG/SHELLSCRIPTMAG_VOL54.JPG'
-        }, done);
+        .expect(200, done);
     });
   });
 
@@ -100,55 +90,56 @@ describe('with Login', () => {
         .send({ book_title: 'test', user_id: 1 })
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
-        .expect('Content-Type', /json/)
-        .expect(200, {
-          book_title: 'test',
-          user_id: 1
-        }, done);
+        .expect(201, done);
     });
   });
 
   describe('POST /books/update/:id', () => {
-    it('respond with http', (done) => {
-      authenticatedUser
+    it('respond with REST', (done) => {
+      request(app)
         .post('/books/update/1')
-        .set('Accept', 'text/html')
-        .expect(200, done);
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${jwt_token}`)
+        .expect(201, done);
     });
   });
 
   describe('GET /books/destroy/:id', () => {
-    it('respond with http', (done) => {
-      authenticatedUser
+    it('respond with REST', (done) => {
+      request(app)
         .get('/books/destroy/1')
-        .set('Accept', 'text/html')
-        .expect(200, done);
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${jwt_token}`)
+        .expect(404, done);
     });
   });
 
   describe('POST /books/update', () => {
-    it('no http page', (done) => {
-      authenticatedUser
-        .post('/books/destroy/1')
-        .set('Accept', 'text/html')
+    it('record not found', (done) => {
+      request(app)
+        .post('/books/destroy/-1')
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${jwt_token}`)
         .expect(404, done);
     });
   });
 });
 
+/*
 describe('GET /logout', () => {
   beforeAll((done) => {
-    authenticatedUser
+    request(app)
       .post('/login')
       .send(userCredentials)
       .expect(302, done);
   });
 
   it('should go back to login', (done) => {
-    authenticatedUser
+    request(app)
       .get('/logout')
       .set('Accept', 'text/html')
       .expect(302)
       .expect('Location', '/', done);
   });
 });
+*/

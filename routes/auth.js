@@ -12,7 +12,7 @@ const hashPassword = (password, salt) => {
   } else { return null; }
 };
 
-router.post('/', (req, res, next) => {
+router.post('/', (req, res) => {
   const username = req.body.email;
   const password = req.body.password;
   User.findOne({ where: { email: username } })
@@ -20,24 +20,18 @@ router.post('/', (req, res, next) => {
       if (!user) {
         res
           .status(401)
-          .json({ success: false, message: 'Incorrect email.' });
+          .json({ errors: { message: 'Incorrect email.' } });
       } else if (hashPassword(password, user.salt) !== user.password) {
         res
           .status(401)
-          .json({ success: false, message: 'Incorrect password.' });
+          .json({ errors: { message: 'Incorrect password.' } });
       } else {
         res
           .status(200)
           // todo: add more security options and secured key.
-          .json({ success: true, token: jwt.sign(user.get(), 'testkey'), message: 'success' });
+          .json({ token: jwt.sign(user.get(), 'testkey') });
       }
     });
-});
-
-router.get('/logout', (req, res) => {
-  if (req.isAuthenticated())
-    req.logout();
-  res.redirect('/');
 });
 
 module.exports = router;
