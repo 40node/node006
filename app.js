@@ -1,16 +1,13 @@
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
-// var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-// var session = require('express-session');
 var models = require('./models'),
   User = models.user;
 
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const ExtractJWT = passportJWT.ExtractJwt;
-// const localStrategy = require('passport-local').Strategy;
 const JWTStrategy = passportJWT.Strategy;
 
 var auth = require('./routes/auth');
@@ -27,13 +24,14 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// add initialize session and passport
-// app.use(session({ secret: '40node' }));
 app.use(passport.initialize());
-// app.use(passport.session());
+
+// all responses send back as application/json type
+app.use((req, res, next) => {
+  res.type('json');
+  next();
+});
 
 // using authentication strategy
 passport.use(new JWTStrategy(
@@ -55,14 +53,23 @@ passport.use(new JWTStrategy(
   }
 ));
 
-app.use((req, res, next) => {
-  res.type('json');
-  next();
-});
+// passport-jwt: custom callback
+// Tokenを持っていなかったり Invarid Token の場合、Json形式で返答しないので、カスタムコールバックで準備する必要がある
+const jwt = (req, res, next) => {
+  passport.authenticate('jwt', { session: false }, (err, user, info) => {
+    if (err) return next(err);
+    if (!user) {
+      return res.status(401).json({ errors: info }).end();
+    }
+    req.user = user;
+    next();
+  })(req, res, next);
+};
 
+// ルーティング: 認証が必要な URI には、jwt関数コールを追記するだけで良い
 app.use('/api/auth', auth);
-app.use('/api/books', passport.authenticate('jwt', { session: false }), books);
-app.use('/api/users', passport.authenticate('jwt', { session: false }), users);
+app.use('/api/books', jwt, books);
+app.use('/api/users', jwt, users);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
