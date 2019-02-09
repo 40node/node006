@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
         res
           .status(200)
           // todo: add more security options and secured key.
-          .json({ token: jwt.sign(user.get(), 'testkey') });
+          .json({ 'token': jwt.sign({ 'id': user.id }, 'testkey') });
       }
     });
 });

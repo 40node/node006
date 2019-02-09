@@ -83,13 +83,16 @@ module.exports = class bookProvider {
   _register_book(book) {
     return this._validate(book) ? libraries.create(book) : Promise.reject(book.errors);
   }
+  _set_port(port) {
+    return (port === 80 || port === 443) ? '' : `:${port}`;
+  }
   // 本を登録し、その結果を表示する
   create(req, res) {
     req.body.user_id = this._user_id;
     this._register_book(req.body)
       .then(result => {
         res
-          .location(`/books/${result.id}`)
+          .location(`${req.host}${this._set_port(req.app.settings.port)}/api/books/${result.id}`)
           .status(201)
           .json(result.get());
       }).catch(errors => {

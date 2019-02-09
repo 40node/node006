@@ -50,10 +50,15 @@ passport.use(new JWTStrategy(
         }
       })
       .catch(err => {
-        return done(err);
+        return done(err, false);
       });
   }
 ));
+
+app.use((req, res, next) => {
+  res.type('json');
+  next();
+});
 
 app.use('/api/auth', auth);
 app.use('/api/books', passport.authenticate('jwt', { session: false }), books);
@@ -67,7 +72,7 @@ app.use((req, res, next) => {
 });
 
 // error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

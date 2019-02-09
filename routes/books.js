@@ -3,7 +3,6 @@ var router = express.Router();
 
 // Controller を追加
 const bookProvider = require('../controllers/bookProvider');
-
 let book;
 
 router.use((req, res, next) => {

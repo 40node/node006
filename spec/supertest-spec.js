@@ -51,6 +51,7 @@ describe('POST /api/auth/', () => {
 });
 
 describe('with Login', () => {
+  // store a jwt token
   let jwt_token;
 
   beforeAll((done) => {

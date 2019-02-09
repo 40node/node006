@@ -142,6 +142,16 @@ describe('#bookProvider', () => {
         });
     });
   });
+  describe('#port', () => {
+    // request されたポート番号が設定されている場合はそれらを返す
+    it('should get a 3,000 of a port number', () => {
+      expect(book._set_port(3000)).toEqual(':3000');
+    });
+    it('should never get any port number', () => {
+      expect(book._set_port(80)).toEqual('');
+      expect(book._set_port(443)).toEqual('');
+    });
+  });
   /*
   describe('#create', () => {
     it('should redirect description of the book', (done) => {
