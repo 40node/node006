@@ -1,7 +1,7 @@
 /* eslint-env jasmine */
 
 // routing テスト
-const request = require('supertest-session');
+const request = require('supertest');
 const app = require('../app');
 
 //let's set up the data we need to pass to the login method
@@ -95,52 +95,52 @@ describe('with Login', () => {
     });
   });
 
-  describe('POST /books/update/:id', () => {
+  describe('PATCH /api/books/:id', () => {
     it('respond with REST', (done) => {
       request(app)
-        .post('/books/update/1')
+        .patch('/api/books/1')
+        .send({ book_title: 'update', user_id: 1 })
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
         .expect(201, done);
     });
   });
 
-  describe('GET /books/destroy/:id', () => {
+  describe('DELETE /books/:id', () => {
+    it('respond with REST', (done) => {
+      let book_info;
+      request(app)
+        .post('/api/books/create')
+        .send({ book_title: 'for delete' })
+        .set('Authorization', `Bearer ${jwt_token}`)
+        .end((err, res) => {
+          book_info = JSON.parse(res.text);
+          request(app)
+            .delete(`/api/books/${book_info.id}`)
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${jwt_token}`)
+            .expect(204, done);
+        });
+    });
+  });
+
+  describe('DELETE /books/:id', () => {
     it('respond with REST', (done) => {
       request(app)
-        .get('/books/destroy/1')
+        .delete('/api/books/1')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
-        .expect(404, done);
+        .expect(409, done);
     });
   });
 
-  describe('POST /books/update', () => {
+  describe('DELETE /api/books/-1', () => {
     it('record not found', (done) => {
       request(app)
-        .post('/books/destroy/-1')
+        .delete('/api/books/-1')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
         .expect(404, done);
     });
   });
 });
-
-/*
-describe('GET /logout', () => {
-  beforeAll((done) => {
-    request(app)
-      .post('/login')
-      .send(userCredentials)
-      .expect(302, done);
-  });
-
-  it('should go back to login', (done) => {
-    request(app)
-      .get('/logout')
-      .set('Accept', 'text/html')
-      .expect(302)
-      .expect('Location', '/', done);
-  });
-});
-*/

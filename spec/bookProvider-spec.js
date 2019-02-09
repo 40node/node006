@@ -1,7 +1,4 @@
 /* eslint-env jasmine */
-
-// bookProvider.js テスト対象をRewireで読み込む
-// const rewire = require('rewire');
 const bookProvider = require('../controllers/bookProvider');
 
 describe('#bookProvider', () => {
@@ -30,8 +27,6 @@ describe('#bookProvider', () => {
 
   // /books/:id では指定された一つの書籍および付随するコメントを取得
   describe('#read_content', () => {
-    //    const get_book = book.__get__('get_book'); // rewire
-
     it('should get content with id eq 1', (done) => {
       book._get_book(1)
         .then(result => {
@@ -50,30 +45,9 @@ describe('#bookProvider', () => {
         }).catch(done.fail);
     });
   });
-  /*
-  describe('#find', () => {
-    it('should see content with id eq 1', (done) => {
-      res.json = (result => {
-        expect(result.user_id).toEqual(1);
-        done();
-      });
-      book.find(req, res);
-    });
-    it('should view an error page', (done) => {
-      // 対象の本がない場合には、エラー画面が返ってくることを期待する
-      req.params.id = null;
-      res.json = (result => {
-        expect(result).toEqual({});
-        done();
-      });
-      book.find(req, res);
-    });
-  });
-  */
 
   // /books/ は、登録されている書籍の一覧を取得
   describe('#get_contents', () => {
-    // const get_contents = book.__get__('get_contents');
     // すべてのテストが非同期並列実行されるため、厳密な冊数を指定できない
     it('should get two or more contents', (done) => {
       book._get_contents(req.user.id)
@@ -87,25 +61,9 @@ describe('#bookProvider', () => {
         }).catch(done.fail);
     });
   });
-  /*
-  describe('#view', () => {
-    it('should list two or more books', (done) => {
-      // 同様にモックを準備する
-      res.json = (result => {
-        expect(result[0].id).toBe(1);
-        expect(result[1].author).toBe('しょっさん');
-        done();
-        return this;
-      });
-      // モック設定後に関数をコール
-      book.view(req, res);
-    });
-  });
-  */
 
   // /books/create では、1件新規に書籍情報を登録する
   describe('#validate', () => {
-    // const validate = book.__get__('validate');
     // 検証された結果
     it('should get the result is true', () => {
       const result = book._validate(req.body);
@@ -121,7 +79,6 @@ describe('#bookProvider', () => {
     });
   });
   describe('#register_book', () => {
-    //const register_book = book.__get__('register_book');
     // 本を登録できると、登録された内容が確認できる
     it('should get the result is book information', (done) => {
       req.body.user_id = 1;
@@ -152,32 +109,9 @@ describe('#bookProvider', () => {
       expect(book._set_port(443)).toEqual('');
     });
   });
-  /*
-  describe('#create', () => {
-    it('should redirect description of the book', (done) => {
-      res.location = (result => {
-        expect(result).toMatch(/^\/books\/[0-9]+$/);
-        done();
-        return this;
-      });
-      book.create(req, res);
-    });
-    it('should view an error page', (done) => {
-      req.body.book_title = '';
-      res.json = (result => {
-        expect(result.message).toBe('エラーが発生しました.');
-        expect(result.error.status).toBe('本を登録できませんでした.');
-        done();
-        return this;
-      });
-      book.create(req, res);
-    });
-  });
-  */
 
   // /books/update/:id で指定された書籍の情報を更新する
   describe('#update', () => {
-    //const update_book = book.__get__('update_book');
     it('should number of book eq 1 when updating a book', (done) => {
       req.body.book_title = '編集タイトル';
       book._update_book(req.body).then(result => {
@@ -186,22 +120,10 @@ describe('#bookProvider', () => {
         done();
       }).catch(done.fail);
     });
-    /*
-    it('should redirect to description of the book', (done) => {
-      res.location = (result) => {
-        expect(result).toMatch(/^\/books\/1/);
-        done();
-        return this;
-      };
-      book.update(req, res);
-    });
-    */
   });
 
   // /books/destroy/:id で指定された書籍を削除する
   describe('#remove_book', () => {
-    // const register_book = book.__get__('register_book');
-    // const remove_book = book.__get__('remove_book');
     it('should number of book eq 1 after it removes a book', (done) => {
       req.body.user_id = 1;
 
@@ -220,30 +142,4 @@ describe('#bookProvider', () => {
         });
     });
   });
-  /*
-  describe('#destroy', () => {
-    const register_book = book.__get__('register_book');
-
-    it('should redirect the view page after it removes the book', (done) => {
-      req.body.user_id = 1;
-      register_book(req.body).then(result => {
-        req.params.id = result.id;
-        res.status = (status) => {
-          expect(status).toBe(204);
-          done();
-        };
-        book.destroy(req, res);
-      });
-    });
-    it('should view an error page', (done) => {
-      res.json = (result => {
-        expect(result.message).toBe('エラーが発生しました.');
-        expect(result.error.status).toBe('本を削除できませんでした.');
-        done();
-        return this;
-      });
-      book.destroy(req, res);
-    });
-  });
-  */
 });

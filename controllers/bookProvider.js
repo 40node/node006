@@ -83,6 +83,7 @@ module.exports = class bookProvider {
   _register_book(book) {
     return this._validate(book) ? libraries.create(book) : Promise.reject(book.errors);
   }
+  // ポート番号の設定
   _set_port(port) {
     return (port === 80 || port === 443) ? '' : `:${port}`;
   }
@@ -92,7 +93,7 @@ module.exports = class bookProvider {
     this._register_book(req.body)
       .then(result => {
         res
-          .location(`${req.host}${this._set_port(req.app.settings.port)}/api/books/${result.id}`)
+          .location(`${req.hostname}${this._set_port(req.app.settings.port)}/api/books/${result.id}`)
           .status(201)
           .json(result.get());
       }).catch(errors => {
@@ -121,17 +122,14 @@ module.exports = class bookProvider {
       .then(result => this._get_book(result))
       .then(content => {
         res
-          .location(`/books/${req.params.id}`)
+          .location(`${req.hostname}${this._set_port(req.app.settings.port)}/api/books/${req.params.id}`)
           .status(201)
           .json(content);
       }).catch(errors => {
         res
-          .status(200)
-          // todo: update to correct message format.
+          .status(400)
           .json({
-            errors: {
-              message: errors
-            }
+            errors: errors
           });
       });
   }

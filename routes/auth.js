@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const jwt = require('jsonwebtoken');
-var models = require('../models'),
+const models = require('../models'),
   User = models.user;
 
 // パスワードハッシュ化
