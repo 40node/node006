@@ -37,6 +37,8 @@ app.use((req, res, next) => {
 passport.use(new JWTStrategy(
   {
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    issuer: 'accounts.example.co.jp',
+    audience: 'https://node40-node006.herokuapp.com/',
     secretOrKey: 'testkey'
   }, (jwt_payload, done) => {
     User.findOne({ where: { id: jwt_payload.id } })
@@ -59,7 +61,7 @@ const jwt = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (err) { return next(err); }
     if (!user) {
-      return res.status(401).json({ errors: info }).end();
+      return res.status(401).json({ 'errors': { 'message': info || 'user unknown' } }).end();
     }
     req.user = user;
     next();

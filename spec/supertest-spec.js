@@ -2,6 +2,7 @@
 
 // routing テスト
 const request = require('supertest');
+const jwt = require('jsonwebtoken');
 const app = require('../app');
 
 //let's set up the data we need to pass to the login method
@@ -48,6 +49,19 @@ describe('POST /api/auth/', () => {
       .send(wrongPasswordCredentials)
       .expect(401, done);
   });
+  it('should deny login using by wrong user id', (done) => {
+    const opts = {
+      issuer: 'accounts.example.co.jp',
+      audience: 'https://node40-node006.herokuapp.com/',
+      expiresIn: '1h',
+    };
+    const token = jwt.sign({ id: 65535 }, 'testkey', opts);
+    request(app)
+      .get('/api/books/1')
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(401, done);
+  });
 });
 
 describe('with Login', () => {
@@ -65,7 +79,7 @@ describe('with Login', () => {
   });
 
   describe('GET /api/books/', () => {
-    it('respond with http', (done) => {
+    it('respond with REST', (done) => {
       request(app)
         .get('/api/books/')
         .set('Accept', 'application/json')

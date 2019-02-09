@@ -26,10 +26,14 @@ router.post('/', (req, res) => {
           .status(401)
           .json({ errors: { message: 'Incorrect password.' } });
       } else {
+        const opts = {
+          issuer: 'accounts.example.co.jp',
+          audience: 'https://node40-node006.herokuapp.com/',
+          expiresIn: '1h',
+        };
         res
           .status(200)
-          // todo: add more security options and secured key.
-          .json({ 'token': jwt.sign({ 'id': user.id }, 'testkey') });
+          .json({ 'token': jwt.sign({ id: user.id }, 'testkey', opts) });
       }
     });
 });
