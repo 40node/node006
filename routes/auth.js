@@ -12,6 +12,7 @@ const hashPassword = (password, salt) => {
   } else { return null; }
 };
 
+// ログイン処理
 router.post('/', (req, res) => {
   const username = req.body.email;
   const password = req.body.password;
