@@ -57,7 +57,7 @@ passport.use(new JWTStrategy(
 // Tokenを持っていなかったり Invarid Token の場合、Json形式で返答しないので、カスタムコールバックで準備する必要がある
 const jwt = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
-    if (err) return next(err);
+    if (err) { return next(err); }
     if (!user) {
       return res.status(401).json({ errors: info }).end();
     }
@@ -79,7 +79,7 @@ app.use((req, res, next) => {
 });
 
 // error handler
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -88,7 +88,9 @@ app.use((err, req, res) => {
   res.status(err.status || 500);
   res.json({
     success: false,
-    message: err
+    errors: {
+      message: err.message
+    }
   });
 });
 
