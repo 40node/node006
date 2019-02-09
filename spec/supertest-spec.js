@@ -84,6 +84,7 @@ describe('with Login', () => {
         .get('/api/books/')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
+        .expect('Content-Type', /json/)
         .expect(200, done);
     });
   });
@@ -94,7 +95,24 @@ describe('with Login', () => {
         .get('/api/books/1')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
+        .expect('Content-Type', /json/)
         .expect(200, done);
+    });
+  });
+
+  describe('GET /api/books/:id', () => {
+    it('respond with REST', (done) => {
+      request(app)
+        .get('/api/books/-1')
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${jwt_token}`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end((err, res) => {
+          if (err) return done(err);
+          if (res.text === {}) return done(Error('I expect getting no value'));
+          done();
+        });
     });
   });
 
@@ -102,10 +120,20 @@ describe('with Login', () => {
     it('respond with REST', (done) => {
       request(app)
         .post('/api/books/create')
-        .send({ book_title: 'test', user_id: 1 })
+        .send({ book_title: 'test' })
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
         .expect(201, done);
+    });
+  });
+  describe('POST /api/books/create', () => {
+    it('respond with REST', (done) => {
+      request(app)
+        .post('/api/books/create')
+        .send({ author: 'test' })
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${jwt_token}`)
+        .expect(400, done);
     });
   });
 
@@ -113,10 +141,20 @@ describe('with Login', () => {
     it('respond with REST', (done) => {
       request(app)
         .patch('/api/books/1')
-        .send({ book_title: 'update', user_id: 1 })
+        .send({ book_title: 'update' })
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
         .expect(201, done);
+    });
+  });
+  describe('PATCH /api/books/:id', () => {
+    it('respond with REST', (done) => {
+      request(app)
+        .patch('/api/books/1')
+        .send({ book_title: '' })
+        .set('Accept', 'application/json')
+        .set('Authorization', `Bearer ${jwt_token}`)
+        .expect(400, done);
     });
   });
 
