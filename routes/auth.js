@@ -4,6 +4,12 @@ const jwt = require('jsonwebtoken');
 const models = require('../models'),
   User = models.user;
 
+var app = express();
+// JWT環境変数の取り込み
+require('dotenv').config({
+  path: '../config/environments/.env.' + app.get('env')
+});
+
 // パスワードハッシュ化
 const hashPassword = (password, salt) => {
   if (password) {
@@ -28,13 +34,14 @@ router.post('/', (req, res) => {
           .json({ errors: { message: 'Incorrect password.' } });
       } else {
         const opts = {
-          issuer: 'accounts.example.co.jp',
-          audience: 'https://node40-node006.herokuapp.com/',
-          expiresIn: '1h',
+          issuer: process.env.ISSUER,
+          audience: process.env.AUDIENCE,
+          expiresIn: process.env.EXPIRES,
         };
+        const secret = process.env.SECRET;
         res
           .status(200)
-          .json({ 'token': jwt.sign({ id: user.id }, 'testkey', opts) });
+          .json({ 'token': jwt.sign({ id: user.id }, secret, opts) });
       }
     });
 });

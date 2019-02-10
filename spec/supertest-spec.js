@@ -5,6 +5,11 @@ const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const app = require('../app');
 
+// JWT環境変数の取り込み
+require('dotenv').config({
+  path: '../config/environments/.env.' + app.get('env')
+});
+
 //let's set up the data we need to pass to the login method
 const userCredentials = {
   email: 'tak@oshiire.to',
@@ -51,11 +56,12 @@ describe('POST /api/auth/', () => {
   });
   it('should deny login using by wrong user id', (done) => {
     const opts = {
-      issuer: 'accounts.example.co.jp',
-      audience: 'https://node40-node006.herokuapp.com/',
-      expiresIn: '1h',
+      issuer: process.env.ISSUER,
+      audience: process.env.AUDIENCE,
+      expiresIn: process.env.EXPIRES,
     };
-    const token = jwt.sign({ id: 65535 }, 'testkey', opts);
+    const secret = process.env.SECRET;
+    const token = jwt.sign({ id: 65535 }, secret, opts);
     request(app)
       .get('/api/books/1')
       .set('Accept', 'application/json')

@@ -16,6 +16,11 @@ var users = require('./routes/users');
 
 var app = express();
 
+// JWT環境変数の取り込み
+require('dotenv').config({
+  path: './config/environments/.env.' + app.get('env')
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -37,9 +42,9 @@ app.use((req, res, next) => {
 passport.use(new JWTStrategy(
   {
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-    issuer: 'accounts.example.co.jp',
-    audience: 'https://node40-node006.herokuapp.com/',
-    secretOrKey: 'testkey'
+    issuer: process.env.ISSUER,
+    audience: process.env.AUDIENCE,
+    secretOrKey: process.env.SECRET
   }, (jwt_payload, done) => {
     User.findOne({ where: { id: jwt_payload.id } })
       .then(user => {

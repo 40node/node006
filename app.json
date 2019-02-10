@@ -5,6 +5,9 @@
     "NODE_ENV": {
       "description": "Environment",
       "value": "production"
+    },
+    "ISSUSER": {
+      "description": ""
     }
   },
   "repository": "https://github.com/40node/library_management",
