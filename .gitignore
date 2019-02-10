@@ -31,3 +31,6 @@ npm-debug.log
 .*.sql
 .node-version
 .DS_Store
+
+# Envirionment variable
+config/envirionments
