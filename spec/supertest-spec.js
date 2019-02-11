@@ -165,7 +165,13 @@ describe('with Login', () => {
         .send({ book_title: 'update' })
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
-        .expect(201, done);
+        .expect(201)
+        .end((err, res) => {
+          const text = JSON.parse(res.text);
+          if (err) return done(err);
+          if (text.id != 1) return done(Error('should get id eq 1'));
+          done();
+        });
     });
   });
   describe('PUT /api/books/:id', () => {
