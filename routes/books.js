@@ -10,27 +10,27 @@ router.use((req, res, next) => {
   next();
 });
 
-// http://books/ へアクセスしたとき → 一覧を表示する
+// http://api/books/ へアクセスしたとき → 一覧を表示する
 router.get('/', (req, res) => {
   book.view(req, res);
 });
 
-// http://books/100 などでアクセスしたとき → 該当のID(この場合は100)の詳細を表示する
+// http://api/books/100 などでアクセスしたとき → 該当のID(この場合は100)の詳細を表示する
 router.get('/:id', (req, res) => {
   book.find(req, res);
 });
 
-// http://books/create へ POST したとき → 本を新たに登録する
+// http://api/books/ へ POST したとき → 本を新たに登録する
 router.post('/', (req, res) => {
   book.create(req, res);
 });
 
-// http://books/100 などで PATCH したとき → 該当のID(この場合は100)の内容を更新する
+// http://api/books/100 などで PUT したとき → 該当のID(この場合は100)の内容を更新する
 router.put('/:id', (req, res) => {
   book.update(req, res);
 });
 
-// http://books/100 などで DELETE アクセスしたとき → 該当のID(この場合は100)の本を削除する
+// http://api/books/100 などで DELETE アクセスしたとき → 該当のID(この場合は100)の本を削除する
 router.delete('/:id', (req, res) => {
   book.destroy(req, res);
 });

@@ -1,0 +1,28 @@
+@startuml
+title 認証シーケンス
+hide footbox
+
+actor User
+boundary Auth
+entity Books
+database UserDB
+database BooksDB
+
+group 認証要求
+  User -> Auth : ユーザ&パスワード
+  Auth -> UserDB : ユーザID
+  UserDB --> Auth : ユーザ情報
+  Auth -> Auth : アクセストークン作成
+  Auth --> User : アクセストークン
+end
+
+group 本の情報を取得
+  User -> Auth : アクセストークン
+  Auth -> Auth : トークンの検査&ユーザ情報取得
+  Auth -> Books : ユーザ情報
+  Books -> BooksDB : 本情報取得
+  BooksDB --> Books : 本情報
+  Books --> User : 本情報(JSON)
+end
+
+@enduml

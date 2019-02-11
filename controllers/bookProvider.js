@@ -104,12 +104,12 @@ module.exports = class bookProvider {
   }
 
   // 対象の本の情報を更新する
-  // todo: update only specific user
-  _update_book(book) {
+  _update_book(id, book) {
     if (this._validate(book)) {
       return libraries.update(book, {
         where: {
-          id: this._user_id
+          user_id: this._user_id,
+          id: id
         }
       });
     } else {
@@ -118,8 +118,8 @@ module.exports = class bookProvider {
   }
   // 本の情報を更新し、その結果を表示する
   update(req, res) {
-    this._update_book(req.body)
-      .then(result => this._get_book(result))
+    this._update_book(req.params.id, req.body)
+      .then(() => this._get_book(req.params.id))
       .then(content => {
         res
           .location(`${req.hostname}${this._set_port(req.app.settings.port)}/api/books/${req.params.id}`)

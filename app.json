@@ -6,10 +6,21 @@
       "description": "Environment",
       "value": "production"
     },
-    "ISSUSER": {
-      "description": ""
+    "ISSUER": {
+      "description": "JWTの発行者を示します - 文字列かURLを指定",
+      "value": ""
+    },
+    "AUDIENCE": {
+      "description": "JWTの想定利用者を示します - 文字列かURLを指定",
+      "value": ""
+    },
+    "SECRET": {
+      "description": "署名の鍵を示します - 自動作成します",
+      "generator": "secret"
     }
   },
   "repository": "https://github.com/40node/library_management",
-  "addons": [ "heroku-postgresql" ]
+  "addons": [
+    "heroku-postgresql"
+  ]
 }
