@@ -21,12 +21,12 @@ router.get('/:id', (req, res) => {
 });
 
 // http://books/create へ POST したとき → 本を新たに登録する
-router.post('/create', (req, res) => {
+router.post('/', (req, res) => {
   book.create(req, res);
 });
 
 // http://books/100 などで PATCH したとき → 該当のID(この場合は100)の内容を更新する
-router.patch('/:id', (req, res) => {
+router.put('/:id', (req, res) => {
   book.update(req, res);
 });
 

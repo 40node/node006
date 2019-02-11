@@ -68,6 +68,21 @@ describe('POST /api/auth/', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect(401, done);
   });
+  it('should deny login using algorithm is none', (done) => {
+    const opts = {
+      issuer: process.env.ISSUER,
+      audience: process.env.AUDIENCE,
+      expiresIn: process.env.EXPIRES,
+      algorithm: 'none',
+    };
+    const secret = process.env.SECRET;
+    const token = jwt.sign({ id: 1 }, secret, opts);
+    request(app)
+      .get('/api/books/1')
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(401, done);
+  });
 });
 
 describe('with Login', () => {
@@ -122,20 +137,20 @@ describe('with Login', () => {
     });
   });
 
-  describe('POST /api/books/create', () => {
+  describe('POST /api/books/', () => {
     it('respond with REST', (done) => {
       request(app)
-        .post('/api/books/create')
+        .post('/api/books/')
         .send({ book_title: 'test' })
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
         .expect(201, done);
     });
   });
-  describe('POST /api/books/create', () => {
+  describe('POST /api/books/', () => {
     it('respond with REST', (done) => {
       request(app)
-        .post('/api/books/create')
+        .post('/api/books/')
         .send({ author: 'test' })
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
@@ -143,20 +158,20 @@ describe('with Login', () => {
     });
   });
 
-  describe('PATCH /api/books/:id', () => {
+  describe('PUT /api/books/:id', () => {
     it('respond with REST', (done) => {
       request(app)
-        .patch('/api/books/1')
+        .put('/api/books/1')
         .send({ book_title: 'update' })
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
         .expect(201, done);
     });
   });
-  describe('PATCH /api/books/:id', () => {
+  describe('PUT /api/books/:id', () => {
     it('respond with REST', (done) => {
       request(app)
-        .patch('/api/books/1')
+        .put('/api/books/1')
         .send({ book_title: '' })
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
@@ -168,7 +183,7 @@ describe('with Login', () => {
     it('respond with REST', (done) => {
       let book_info;
       request(app)
-        .post('/api/books/create')
+        .post('/api/books/')
         .send({ book_title: 'for delete' })
         .set('Authorization', `Bearer ${jwt_token}`)
         .end((err, res) => {

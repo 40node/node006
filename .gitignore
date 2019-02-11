@@ -33,4 +33,4 @@ npm-debug.log
 .DS_Store
 
 # Envirionment variable
-config/envirionments
+config/environments
