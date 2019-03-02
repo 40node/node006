@@ -5,32 +5,37 @@ var bodyParser = require('body-parser');
 var models = require('./models'),
   User = models.user;
 
+// passport
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const ExtractJWT = passportJWT.ExtractJwt;
 const JWTStrategy = passportJWT.Strategy;
 
+// define routing table
 var auth = require('./routes/auth');
 var books = require('./routes/books');
 var users = require('./routes/users');
 
 var app = express();
 
+// set up rate limiter: maximum of five requests per second on production or a handred request per second on development
+var RateLimit = require('express-rate-limit');
+var limiter = new RateLimit({
+  windowMs: 1 * 1000, // 1 second
+  max: process.env.NODE_ENV === 'production' ? 5 : 100
+});
+
 // JWT環境変数の取り込み
 require('dotenv').config({
   path: './config/environments/.env.' + app.get('env')
 });
 
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'ejs');
-
-// uncomment after placing your favicon in /public
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
+app.use(limiter);
 
 // all responses send back as application/json type
 app.use((req, res, next) => {
