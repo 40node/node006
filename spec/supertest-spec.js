@@ -36,6 +36,14 @@ const noPasswordCredentials = {
 
 //now let's login the user before we run any tests
 describe('POST /api/auth/', () => {
+  const unauthorized = (token, done) => {
+    request(app)
+      .get('/api/books/1')
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(401, done);
+  };
+
   it('should be 404 not found', (done) => {
     request(app)
       .get('/api/')
@@ -72,20 +80,26 @@ describe('POST /api/auth/', () => {
   });
   it('should deny login using by wrong user id', (done) => {
     const token = jwt.sign({ id: 65535 }, secret, opts);
+    unauthorized(token, done);
+    /*
     request(app)
       .get('/api/books/1')
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .expect(401, done);
+      */
   });
   it('should deny login using algorithm is none', (done) => {
     opts.algorithm = 'none';
     const token = jwt.sign({ id: 1 }, secret, opts);
+    unauthorized(token, done);
+    /*
     request(app)
       .get('/api/books/1')
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .expect(401, done);
+      */
   });
   /*  it('should deny no login user', (done) => {
       const token = jwt.sign({ id: 65535 }, secret, opts);
@@ -137,7 +151,7 @@ describe('with Login', () => {
   describe('GET /api/books/:id', () => {
     it('respond no content with REST', (done) => {
       request(app)
-        .get('/api/books/-1')
+        .get('/api/books/a')
         .set('Accept', 'application/json')
         .set('Authorization', `Bearer ${jwt_token}`)
         .expect('Content-Type', /json/)
