@@ -120,16 +120,6 @@ describe('#bookProvider', () => {
         done();
       }).catch(done.fail);
     });
-    // 書籍の情報が更新できなければエラーが返る
-    it('should number of book eq 1 when updating a book', (done) => {
-      req.body.book_title = '';
-      book._update_book(1, req.body)
-        .then(done.fail)
-        .catch(result => {
-          expect(result).toEqual([{ message: '本のタイトルが入っていません' }]);
-          done();
-        });
-    });
   });
 
   // /books/destroy/:id で指定された書籍を削除する

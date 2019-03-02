@@ -105,16 +105,13 @@ module.exports = class bookProvider {
 
   // 対象の本の情報を更新する
   _update_book(id, book) {
-    if (this._validate(book)) {
-      return libraries.update(book, {
-        where: {
-          user_id: this._user_id,
-          id: id
-        }
-      });
-    } else {
-      return Promise.reject(book.errors);
-    }
+    return libraries.update(book, {
+      where: {
+        user_id: this._user_id,
+        id: id
+      }
+    });
+
   }
   // 本の情報を更新し、その結果を表示する
   update(req, res) {

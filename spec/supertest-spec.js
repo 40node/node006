@@ -9,6 +9,12 @@ const app = require('../app');
 require('dotenv').config({
   path: '../config/environments/.env.' + app.get('env')
 });
+let opts = {
+  issuer: process.env.ISSUER,
+  audience: process.env.AUDIENCE,
+  expiresIn: process.env.EXPIRES,
+};
+const secret = process.env.SECRET;
 
 //let's set up the data we need to pass to the login method
 const userCredentials = {
@@ -22,6 +28,10 @@ const wrongEmailCredentials = {
 const wrongPasswordCredentials = {
   email: 'tak@oshiire.to',
   password: 'foo'
+};
+const noPasswordCredentials = {
+  email: 'tak@oshiire.to',
+  password: ''
 };
 
 //now let's login the user before we run any tests
@@ -54,13 +64,13 @@ describe('POST /api/auth/', () => {
       .send(wrongPasswordCredentials)
       .expect(401, done);
   });
+  it('should deny login with no password', (done) => {
+    request(app)
+      .post('/api/auth/')
+      .send(noPasswordCredentials)
+      .expect(401, done);
+  });
   it('should deny login using by wrong user id', (done) => {
-    const opts = {
-      issuer: process.env.ISSUER,
-      audience: process.env.AUDIENCE,
-      expiresIn: process.env.EXPIRES,
-    };
-    const secret = process.env.SECRET;
     const token = jwt.sign({ id: 65535 }, secret, opts);
     request(app)
       .get('/api/books/1')
@@ -69,14 +79,16 @@ describe('POST /api/auth/', () => {
       .expect(401, done);
   });
   it('should deny login using algorithm is none', (done) => {
-    const opts = {
-      issuer: process.env.ISSUER,
-      audience: process.env.AUDIENCE,
-      expiresIn: process.env.EXPIRES,
-      algorithm: 'none',
-    };
-    const secret = process.env.SECRET;
+    opts.algorithm = 'none';
     const token = jwt.sign({ id: 1 }, secret, opts);
+    request(app)
+      .get('/api/books/1')
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(401, done);
+  });
+  it('should deny no login user', (done) => {
+    const token = jwt.sign({ id: 65535 }, secret, opts);
     request(app)
       .get('/api/books/1')
       .set('Accept', 'application/json')
@@ -172,16 +184,6 @@ describe('with Login', () => {
           if (text.id !== 1) return done(Error('should get id eq 1'));
           done();
         });
-    });
-  });
-  describe('PUT /api/books/:id', () => {
-    it('respond with REST', (done) => {
-      request(app)
-        .put('/api/books/1')
-        .send({ book_title: '' })
-        .set('Accept', 'application/json')
-        .set('Authorization', `Bearer ${jwt_token}`)
-        .expect(400, done);
     });
   });
 
