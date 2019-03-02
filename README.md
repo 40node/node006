@@ -1,7 +1,7 @@
 # library_management
 シェルスクリプトマガジンVol.59サンプルプログラム
 
-[![Codacy Badge]https://api.codacy.com/project/badge/Grade/336194eac9d54b1abea23fda12544e74)]https://www.codacy.com/app/app107724887/node006?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=40node/node006&amp;utm_campaign=Badge_Grade)[![CircleCI]（https://circleci.com/gh/40node/node006.svg?style=svg)]https://circleci.com/gh/40node/node006)[![Build Status]（https://travis-ci.org/40node/node006.svg?branch=master)]（https://travis-ci.org/40node/node006)[![Total alerts]https://img.shields.io/lgtm/alerts/g/40node/node006.svg?logo=lgtm&logoWidth=18)]（https://lgtm.com/projects/g/40node/node006/alerts/)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/336194eac9d54b1abea23fda12544e74)](https://www.codacy.com/app/app107724887/node006?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=40node/node006&amp;utm_campaign=Badge_Grade)[![CircleCI](https://circleci.com/gh/40node/node006.svg?style=svg)](https://circleci.com/gh/40node/node006)[![Build Status](https://travis-ci.org/40node/node006.svg?branch=master)](https://travis-ci.org/40node/node006)[![Total alerts](https://img.shields.io/lgtm/alerts/g/40node/node006.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/40node/node006/alerts/)
 
 ## 前提条件
 
