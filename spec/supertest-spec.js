@@ -169,7 +169,7 @@ describe('with Login', () => {
         .end((err, res) => {
           const text = JSON.parse(res.text);
           if (err) return done(err);
-          if (text.id != 1) return done(Error('should get id eq 1'));
+          if (text.id !== 1) return done(Error('should get id eq 1'));
           done();
         });
     });

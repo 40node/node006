@@ -7,9 +7,9 @@ module.exports = (sequelize, DataTypes) => {
     image_url: DataTypes.STRING(2048),
     user_id: DataTypes.INTEGER
   },
-    {
-      underscored: true
-    });
+  {
+    underscored: true
+  });
   Library.associate = function (models) {
     // associations can be defined here
     Library.hasMany(models.Comment, { foreignKey: 'book_id' });
