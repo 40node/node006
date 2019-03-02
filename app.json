@@ -19,7 +19,7 @@
       "generator": "secret"
     }
   },
-  "repository": "https://github.com/40node/library_management",
+  "repository": "https://github.com/40node/node006",
   "addons": [
     "heroku-postgresql"
   ]
