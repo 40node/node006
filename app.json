@@ -14,6 +14,10 @@
       "description": "JWTの想定利用者を示します - 文字列かURLを指定",
       "value": ""
     },
+    "EXPIRES": {
+      "description": "アクセストークンの有効期限を示します - 数値および時間指示子",
+      "value": ""
+    },
     "SECRET": {
       "description": "署名の鍵を示します - 自動作成します",
       "generator": "secret"
